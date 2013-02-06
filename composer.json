@@ -1,0 +1,21 @@
+{
+  "name": "anahkiasen/flickering",
+  "description": "A modern interface for the Flickr API",
+  "authors": [
+    {
+      "name": "Anahkiasen",
+      "email": "ehtnam6@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.3.0",
+    "illuminate/support": "dev-master",
+    "anahkiasen/underscore-php": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Flickering": "src/"
+    }
+  }
+}
