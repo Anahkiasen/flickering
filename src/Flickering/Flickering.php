@@ -93,7 +93,7 @@ class Flickering
   /**
    * Build required dependencies
    */
-  protected function getContainer()
+  protected function getDependency($dependency = null)
   {
     // If no Container available, build one
     if (!static::$container) {
@@ -106,6 +106,11 @@ class Flickering
       static::$container = $container;
     }
 
+    // If we provided a dependency, make it on the go
+    if ($dependency) {
+      return static::$container->make($dependency);
+    }
+
     return static::$container;
   }
 
@@ -116,6 +121,7 @@ class Flickering
    */
   public function getCache()
   {
-    return $this->getContainer()->make('cache');
+    return $this->getDependency('cache');
+  }
   }
 }
