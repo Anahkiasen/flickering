@@ -11,9 +11,6 @@
   // Strategies ---------------------------------------------------- /
 
   'Strategy' => array(
-    'Flickr' => array(
-      'api_id' => '30de750088fe29573e0fb8bcdefbd473',
-      'api_secret' => 'c700f167e4f9a162',
-    ),
+    'Flickr' => array(),
   ),
 );

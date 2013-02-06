@@ -27,6 +27,9 @@ class Authentificator
   public function getAuthentificationUrl()
   {
     $config = $this->flickering->getConfig()->get('opauth');
+    $config['Strategy']['Flickr']['key'] = $this->flickering->getApiKey();
+    $config['Strategy']['Flickr']['secret'] = $this->flickering->getApiSecret();
+
     $opauth = new \Opauth($config);
   }
 
