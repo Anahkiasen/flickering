@@ -1,7 +1,11 @@
 {
   "name": "anahkiasen/flickering",
   "description": "A modern interface for the Flickr API",
-  "keywords": ["flickr", "api", "php"],
+  "keywords": [
+    "flickr",
+    "api",
+    "php"
+  ],
   "authors": [
     {
       "name": "Anahkiasen",
@@ -12,12 +16,18 @@
   "require": {
     "php": ">=5.3.0",
     "anahkiasen/underscore-php": "dev-master",
-    "eher/oauth": "dev-master",
+    "opauth/flickr": "dev-master",
     "illuminate/cache": "dev-master",
     "illuminate/http": "dev-master",
     "illuminate/config": "dev-master",
     "illuminate/support": "dev-master"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/pocket7878/opauth-flickr.git"
+    }
+  ],
   "autoload": {
     "psr-0": {
       "Flickering": "src/"
