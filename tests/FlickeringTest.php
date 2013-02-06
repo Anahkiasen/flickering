@@ -14,4 +14,11 @@ class FlickeringTest extends FlickeringTests
 
     $this->assertInstanceOf('Flickering\Method', $method);
   }
+
+  public function testCanGetOptionFromConfig()
+  {
+    $config = $this->getDummyFlickering()->getOption('api_key');
+
+    $this->assertEquals('foo', $config);
+  }
 }

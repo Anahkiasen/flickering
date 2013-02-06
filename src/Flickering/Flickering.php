@@ -1,8 +1,10 @@
 <?php
 namespace Flickering;
 
-use Illuminate\Container\Container;
 use Illuminate\Cache\FileStore;
+use Illuminate\Config\FileLoader;
+use Illuminate\Config\Repository;
+use Illuminate\Container\Container;
 
 class Flickering
 {
@@ -30,10 +32,10 @@ class Flickering
    * @param string $key    The API key
    * @param string $secret The API secret key
    */
-  public function __construct($key, $secret)
+  public function __construct($key = null, $secret = null)
   {
-    $this->key    = $key;
-    $this->secret = $secret;
+    $this->key    = $key    ?: $this->getOption('api_key');
+    $this->secret = $secret ?: $this->getOption('api_secret');
   }
 
   /**
@@ -86,6 +88,19 @@ class Flickering
     return null;
   }
 
+  /**
+   * Get an option from the config file
+   *
+   * @param string $option   The option to fetch
+   * @param mixed  $fallback A fallback
+   *
+   * @return mixed
+   */
+  public function getOption($option, $fallback = null)
+  {
+    return $this->getConfig()->get('config.'.$option, $fallback);
+  }
+
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// DEPENDENCIES ///////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -98,7 +113,16 @@ class Flickering
     // If no Container available, build one
     if (!static::$container) {
       $container = new Container;
+
       $container->bind('Filesystem', 'Illuminate\Filesystem\Filesystem');
+      $container->bind('FileLoader', function($container) {
+        return new FileLoader($container['Filesystem'], __DIR__.'/../..');
+      });
+
+      $container->bind('config', function($container) {
+        return new Repository($container['FileLoader'], 'config');
+      });
+
       $container->bind('cache', function($container) {
         return new FileStore($container->make('Filesystem'), __DIR__.'/../../cache');
       });
@@ -119,9 +143,18 @@ class Flickering
    *
    * @return Cache
    */
-  public function getCache()
+  protected function getCache()
   {
     return $this->getDependency('cache');
   }
+
+  /**
+   * Get the Config instance
+   *
+   * @return Config
+   */
+  protected function getConfig()
+  {
+    return $this->getDependency('config');
   }
 }
