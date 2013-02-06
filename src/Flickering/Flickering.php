@@ -19,7 +19,7 @@ class Flickering
    * Setup an instance of the API
    *
    * @param string $key    The API key
-   * @param string $secret The API secret hash
+   * @param string $secret The API secret key
    */
   public function __construct($key, $secret)
   {
@@ -31,13 +31,26 @@ class Flickering
    * Call a method on the current API
    *
    * @param string $method     The method name
-   * @param array  $parameters Parameters for the method
+   * @param array  $parameters Its parameters
    *
    * @return Method
    */
   public function callMethod($method, $parameters = array())
   {
     return new Method($this, $method, $parameters);
+  }
+
+  /**
+   * Directly get the results of a method
+   *
+   * @param string $method     The method name
+   * @param array  $parameters Its parameters
+   *
+   * @return Results
+   */
+  public function getResultsOf($method, $parameters = array())
+  {
+    return $this->callMethod($method, $parameters)->getResults();
   }
 
   ////////////////////////////////////////////////////////////////////
