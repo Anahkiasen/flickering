@@ -109,15 +109,7 @@ class Request
     $lifetime   = $this->config->get('config.cache.lifetime');
 
     return $this->cache->remember($this->hash, $lifetime, function() use ($url, $parameters) {
-      $request = curl_init($url);
-      curl_setopt($request, CURLOPT_POST, true);
-      curl_setopt($request, CURLOPT_ENCODING, 'UTF-8');
-      curl_setopt($request, CURLOPT_POSTFIELDS, $parameters);
-      curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($request, CURLOPT_HTTPHEADER, array('Expect:'));
-
-      // Get results and parse them
-      $content = curl_exec($request);
+      $content = Helpers::curl($url, $parameters);
       $content = Parse::fromJSON($content);
 
       return $content;
