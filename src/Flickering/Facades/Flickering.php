@@ -6,6 +6,7 @@
  */
 namespace Flickering\Facades;
 
+use \Flickering\Flickering as FlickeringInstance;
 use Illuminate\Support\Facades\Facade;
 
 class Flickering extends Facade
@@ -18,7 +19,7 @@ class Flickering extends Facade
    */
   public static function handshake($key, $secret)
   {
-    static::$resolvedInstance['flickering'] = new \Flickering\Flickering($key, $secret);
+    static::$resolvedInstance['flickering'] = new FlickeringInstance($key, $secret);
   }
 
   /**
