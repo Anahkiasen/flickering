@@ -11,8 +11,9 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=5.3.0",
-    "illuminate/support": "dev-master",
-    "anahkiasen/underscore-php": "dev-master"
+    "anahkiasen/underscore-php": "dev-master",
+    "illuminate/cache": "dev-master",
+    "illuminate/support": "dev-master"
   },
   "autoload": {
     "psr-0": {

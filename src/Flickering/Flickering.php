@@ -1,6 +1,9 @@
 <?php
 namespace Flickering;
 
+use Illuminate\Container\Container;
+use Illuminate\Cache\FileStore;
+
 class Flickering
 {
   /**
@@ -14,6 +17,12 @@ class Flickering
    * @var string
    */
   protected $secret;
+
+  /**
+   * The Illuminate Container
+   * @var Container
+   */
+  protected static $container;
 
   /**
    * Setup an instance of the API
@@ -75,5 +84,38 @@ class Flickering
   public function getUser()
   {
     return null;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////// DEPENDENCIES ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Build required dependencies
+   */
+  protected function getContainer()
+  {
+    // If no Container available, build one
+    if (!static::$container) {
+      $container = new Container;
+      $container->bind('Filesystem', 'Illuminate\Filesystem\Filesystem');
+      $container->bind('cache', function($container) {
+        return new FileStore($container->make('Filesystem'), __DIR__.'/../../cache');
+      });
+
+      static::$container = $container;
+    }
+
+    return static::$container;
+  }
+
+  /**
+   * Get the Cache instance
+   *
+   * @return Cache
+   */
+  public function getCache()
+  {
+    return $this->getContainer()->make('cache');
   }
 }
