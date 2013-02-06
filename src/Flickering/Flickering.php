@@ -116,6 +116,14 @@ class Flickering
   }
 
   /**
+   * Get the user's API secret
+   *
+   * @return string
+   */
+  public function getApiSecret()
+  {
+    return $this->secret;
+  }
    * Get authentified user
    *
    * @return string
@@ -143,6 +151,25 @@ class Flickering
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Get the Cache instance
+   *
+   * @return Cache
+   */
+  public function getCache()
+  {
+    return $this->getDependency('cache');
+  }
+
+  /**
+   * Get the Config instance
+   *
+   * @return Config
+   */
+  public function getConfig()
+  {
+    return $this->getDependency('config');
+  }
+
    * Build required dependencies
    */
   protected function getDependency($dependency = null)
@@ -173,25 +200,5 @@ class Flickering
     }
 
     return static::$container;
-  }
-
-  /**
-   * Get the Cache instance
-   *
-   * @return Cache
-   */
-  public function getCache()
-  {
-    return $this->getDependency('cache');
-  }
-
-  /**
-   * Get the Config instance
-   *
-   * @return Config
-   */
-  public function getConfig()
-  {
-    return $this->getDependency('config');
   }
 }
