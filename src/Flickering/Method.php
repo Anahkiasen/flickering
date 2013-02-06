@@ -42,7 +42,7 @@ class Method
    * @param Flickering $flickering The Flickering API
    * @param string     $method     The method being called
    */
-  public function __construct(Flickering $flickering, $method, $parameters)
+  public function __construct(Flickering $flickering, $method, $parameters = array())
   {
     $this->flickering = $flickering;
     $this->method     = $method;
