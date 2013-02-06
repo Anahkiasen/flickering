@@ -54,6 +54,28 @@ class Method
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Change the format of the method
+   *
+   * @param string $format The format
+   */
+  public function setFormat($format)
+  {
+    $this->format = $format;
+
+    return $this;
+  }
+
+  /**
+   * Get the format of the method
+   *
+   * @return string
+   */
+  public function getFormat()
+  {
+    return $this->format;
+  }
+
+  /**
    * Get the method being called
    *
    * @return string
