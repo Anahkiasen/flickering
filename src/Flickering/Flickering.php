@@ -125,6 +125,15 @@ class Flickering
   {
     return $this->secret;
   }
+
+  public function getAuthentificationUrl()
+  {
+    $authentificator = new OAuth\Authentificator($this);
+
+    return $authentificator->getAuthentificationUrl();
+  }
+
+  /**
    * Get authentified user
    *
    * @return string
