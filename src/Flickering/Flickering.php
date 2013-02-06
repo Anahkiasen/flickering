@@ -27,7 +27,8 @@ class Flickering
    * @var array
    */
   protected $aliases = array(
-    'photosetsGetList' => array('user_id','page','per_page'),
+    'photosetsGetList'   => array('user_id','page','per_page'),
+    'photosetsGetPhotos' => array('photoset_id', 'extras', 'privacy_filter', 'per_page', 'page', 'media'),
   );
 
   /**

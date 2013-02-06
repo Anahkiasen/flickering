@@ -40,6 +40,7 @@ class Request
     $parameters = $this->parameters;
     $parameters['method'] = $method->getMethod();
     $parameters = Arrays::sortKeys($parameters);
+    $parameters = Arrays::clean($parameters);
 
     $hash = array();
     foreach ($parameters as $k => $v) $hash[] = $k.'-'.$v;
