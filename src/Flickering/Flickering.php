@@ -1,10 +1,12 @@
 <?php
 namespace Flickering;
 
+use BadMethodCallException;
 use Illuminate\Cache\FileStore;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
+use Underscore\Types\Arrays;
 
 class Flickering
 {
@@ -19,6 +21,14 @@ class Flickering
    * @var string
    */
   protected $secret;
+
+  /**
+   * A list of method aliases and their arguments
+   * @var array
+   */
+  protected $aliases = array(
+    'photosetsGetList' => array('user_id','page','per_page'),
+  );
 
   /**
    * The Illuminate Container
@@ -36,6 +46,32 @@ class Flickering
   {
     $this->key    = $key    ?: $this->getOption('api_key');
     $this->secret = $secret ?: $this->getOption('api_secret');
+  }
+
+  /**
+   * Aliased calls
+   *
+   * @return Method
+   */
+  public function __call($method, $parameters)
+  {
+    if (array_key_exists($method, $this->aliases)) {
+
+      // Get actual method name and arguments
+      $argumentList = $this->aliases[$method];
+      $method = preg_replace_callback('/[A-Z]/', function($match) {
+        return '.'.strtolower($match[0]);
+      }, $method, 1);
+
+      // Rebuild parameters array
+      foreach($argumentList as $key => $argument) {
+        $arguments[$argument] = Arrays::get($parameters, $key);
+      }
+
+      return $this->callMethod($method, $arguments);
+    }
+
+    throw new BadMethodCallException('The requested method "' .$method. '" does not exist');
   }
 
   /**

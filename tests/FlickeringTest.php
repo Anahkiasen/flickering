@@ -21,4 +21,14 @@ class FlickeringTest extends FlickeringTests
 
     $this->assertEquals('foo', $config);
   }
+
+  public function testCanUseMethodShortcuts()
+  {
+    $method = $this->getDummyFlickering();
+    $method = $method->photosetsGetList('photoset');
+
+    $this->assertInstanceOf('Flickering\Method', $method);
+    $this->assertEquals('flickr.photosets.getList', $method->getMethod());
+    $this->assertEquals(array('user_id' => 'photoset', 'page' => null, 'per_page' => null), $method->getParameters());
+  }
 }
