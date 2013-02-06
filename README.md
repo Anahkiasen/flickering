@@ -3,7 +3,9 @@ Flickering
 
 [![Build Status](https://next.travis-ci.org/Anahkiasen/flickering.png?branch=master)](https://next.travis-ci.org/Anahkiasen/flickering)
 
-Flickering is a next-generation PHP API for the _Flickr_ photos sharing social network. It's available on Composer and you can add it to your application like this :
+Flickering is a next-generation PHP API for the _Flickr_ photos sharing social network. It's a **work in progress**.
+
+It's available on Composer and you can add it to your application like this :
 
 ```json
 "anahkiasen/flickering": "dev-master"
