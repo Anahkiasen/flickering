@@ -27,6 +27,14 @@ class Flickering
     $this->secret = $secret;
   }
 
+  /**
+   * Call a method on the current API
+   *
+   * @param string $method     The method name
+   * @param array  $parameters Parameters for the method
+   *
+   * @return Method
+   */
   public function callMethod($method, $parameters = array())
   {
     return new Method($this, $method, $parameters);

@@ -89,7 +89,8 @@ class Method
    */
   public function getResults()
   {
-    $results = Arrays::first($this->send());
+    $results = $this->send();
+    $results = Arrays::first($results);
 
     return $results;
   }
@@ -145,6 +146,7 @@ class Method
    */
   protected function send()
   {
+    // Prepare request
     $request = curl_init($this->getEndpoint());
     curl_setopt($request, CURLOPT_POST, true);
     curl_setopt($request, CURLOPT_ENCODING, 'UTF-8');
@@ -152,8 +154,10 @@ class Method
     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($request, CURLOPT_HTTPHEADER, array('Expect:'));
 
+    // Get results and parse them
     $content = curl_exec($request);
+    $content = Parse::fromJSON($content);
 
-    return Parse::fromJSON($content);
+    return $content;
   }
 }
