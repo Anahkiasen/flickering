@@ -13,6 +13,12 @@ use Underscore\Types\String;
 class Method
 {
   /**
+   * The current instance of the Flickering
+   * @var Flickering
+   */
+  protected $flickering;
+
+  /**
    * The method being called
    * @var string
    */
@@ -23,12 +29,6 @@ class Method
    * @var string
    */
   protected $format = 'json';
-
-  /**
-   * The current instance of the Flickering
-   * @var Flickering
-   */
-  protected $flickering;
 
   /**
    * POST parameters for the Method
