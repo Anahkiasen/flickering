@@ -6,6 +6,7 @@ use Illuminate\Cache\FileStore;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Underscore\Types\Arrays;
 
 class Flickering
@@ -170,6 +171,17 @@ class Flickering
     return $this->getDependency('config');
   }
 
+  /**
+   * Get the Session instance
+   *
+   * @return Session
+   */
+  public function getSession()
+  {
+    return $this->getDependency('session');
+  }
+
+  /**
    * Build required dependencies
    */
   protected function getDependency($dependency = null)
@@ -189,6 +201,13 @@ class Flickering
 
       $container->bind('cache', function($container) {
         return new FileStore($container->make('Filesystem'), __DIR__.'/../../cache');
+      });
+
+      $container->singleton('session', function($container) {
+        $session = new Session();
+        if (!$session->isStarted()) $session->start();
+
+        return $session;
       });
 
       static::$container = $container;
