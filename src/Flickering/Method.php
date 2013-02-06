@@ -1,4 +1,9 @@
 <?php
+/**
+ * Method
+ *
+ * A method being called on the API
+ */
 namespace Flickering;
 
 use Underscore\Parse;
@@ -90,7 +95,7 @@ class Method
   public function getResults()
   {
     $results = $this->send();
-    $results = Arrays::first($results);
+    $results = Results::from($results)->first();
 
     return $results;
   }
