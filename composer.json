@@ -1,6 +1,7 @@
 {
   "name": "anahkiasen/flickering",
   "description": "A modern interface for the Flickr API",
+  "keywords": ["flickr", "api", "php"],
   "authors": [
     {
       "name": "Anahkiasen",
