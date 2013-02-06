@@ -34,3 +34,6 @@ Static interface
 ================
 
 Flickering also uses [Illuminate][]'s Facade component to provide a static interface to Flickering. You can create a new static instance of Flickering via the `Flickering::handshake($apiKey, $apiSecret)` method.
+
+[Underscore.php]: anahkiasen.github.com/underscore-php
+[Illuminate]: https://github.com/illuminate/support
