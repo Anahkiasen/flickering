@@ -157,6 +157,7 @@ class Flickering
   private function getOpauthConfiguration()
   {
     $config = $this->getConfig()->get('opauth');
+    $config['strategy_dir'] = __DIR__.'/../vendor/flickr';
     $config['Strategy']['Flickr']['key'] = $this->key;
     $config['Strategy']['Flickr']['secret'] = $this->secret;
 
