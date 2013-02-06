@@ -1,6 +1,7 @@
 <?php
 namespace Flickering;
 
+use Opauth;
 use BadMethodCallException;
 use Illuminate\Cache\FileStore;
 use Illuminate\Config\FileLoader;
@@ -126,13 +127,6 @@ class Flickering
     return $this->secret;
   }
 
-  public function getAuthentificationUrl()
-  {
-    $authentificator = new OAuth\Authentificator($this);
-
-    return $authentificator->getAuthentificationUrl();
-  }
-
   /**
    * Get authentified user
    *
@@ -154,6 +148,34 @@ class Flickering
   public function getOption($option, $fallback = null)
   {
     return $this->getConfig()->get('config.'.$option, $fallback);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// OPAUTH //////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  private function getOpauthConfiguration()
+  {
+    $config = $this->getConfig()->get('opauth');
+    $config['Strategy']['Flickr']['key'] = $this->key;
+    $config['Strategy']['Flickr']['secret'] = $this->secret;
+
+    return $config;
+  }
+
+  /**
+   * Return Opauth instance for authentification
+   *
+   * @return Opauth
+   */
+  public function getOpauth()
+  {
+    return new Opauth($this->getOpauthConfiguration());
+  }
+
+  public function getOpauthCallback()
+  {
+    return new Opauth($this->getOpauthConfiguration(), false);
   }
 
   ////////////////////////////////////////////////////////////////////
