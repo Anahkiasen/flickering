@@ -176,7 +176,7 @@ class Flickering
 
   public function getOpauthCallback()
   {
-    return new Opauth($this->getOpauthConfiguration(), false);
+    $opauth = new Opauth($this->getOpauthConfiguration(), false);
   }
 
   ////////////////////////////////////////////////////////////////////
