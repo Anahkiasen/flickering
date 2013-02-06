@@ -11,6 +11,6 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
 
   protected function getDummyMethod()
   {
-    return new Method($this->getDummyFlickering(), 'foobar');
+    return new Method($this->getDummyFlickering(), 'foobar', array('foo' => 'bar'));
   }
 }
