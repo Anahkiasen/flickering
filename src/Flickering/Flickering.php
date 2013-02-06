@@ -143,7 +143,7 @@ class Flickering
    *
    * @return Cache
    */
-  protected function getCache()
+  public function getCache()
   {
     return $this->getDependency('cache');
   }
@@ -153,7 +153,7 @@ class Flickering
    *
    * @return Config
    */
-  protected function getConfig()
+  public function getConfig()
   {
     return $this->getDependency('config');
   }

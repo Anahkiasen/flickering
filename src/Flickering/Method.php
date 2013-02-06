@@ -6,7 +6,6 @@
  */
 namespace Flickering;
 
-use Underscore\Parse;
 use Underscore\Types\Arrays;
 use Underscore\Types\String;
 
@@ -31,10 +30,10 @@ class Method
   protected $format = 'json';
 
   /**
-   * POST parameters for the Method
+   * Parameters for the Method
    * @var array
    */
-  protected $post;
+  protected $parameters;
 
   /**
    * Build a new Method
@@ -46,7 +45,7 @@ class Method
   {
     $this->flickering = $flickering;
     $this->method     = $method;
-    $this->post       = $parameters;
+    $this->parameters = $parameters;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -86,6 +85,16 @@ class Method
   }
 
   /**
+   * Get the Method parameters
+   *
+   * @return array
+   */
+  public function getParameters()
+  {
+    return $this->parameters;
+  }
+
+  /**
    * Get the Method's endpoint
    *
    * @return string
@@ -93,7 +102,7 @@ class Method
   public function getEndpoint()
   {
     // Prepare and format parameters
-    $parameters = $this->prepareParameters($this->post);
+    $parameters = $this->prepareParameters($this->parameters);
     $parameters = $this->inlineParameters($parameters);
 
     return 'http://api.flickr.com/services/rest/?'.$parameters;
@@ -106,25 +115,35 @@ class Method
    */
   public function getResponse()
   {
-    return $this->send();
+    return $this->getRequest()->getRawResponse();
   }
 
   /**
    * Get the results of a method
    *
-   * @return array
+   * @return Results
    */
   public function getResults()
   {
-    $results = $this->send();
-    $results = Results::from($results)->first();
-
-    return $results;
+    return $this->getRequest()->getResults();
   }
 
   ////////////////////////////////////////////////////////////////////
   ///////////////////////// INTERNAL METHODS /////////////////////////
   ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get a new Request instance
+   *
+   * @return Request
+   */
+  protected function getRequest()
+  {
+    return new Request(
+      $this->flickering->getCache(),
+      $this->flickering->getConfig(),
+      $this);
+  }
 
   /**
    * Format the Method parameters
@@ -164,27 +183,5 @@ class Method
       ->values()
       ->implode('&')
       ->obtain();
-  }
-
-  /**
-   * Send the request and get its results
-   *
-   * @return array
-   */
-  protected function send()
-  {
-    // Prepare request
-    $request = curl_init($this->getEndpoint());
-    curl_setopt($request, CURLOPT_POST, true);
-    curl_setopt($request, CURLOPT_ENCODING, 'UTF-8');
-    curl_setopt($request, CURLOPT_POSTFIELDS, $this->post);
-    curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($request, CURLOPT_HTTPHEADER, array('Expect:'));
-
-    // Get results and parse them
-    $content = curl_exec($request);
-    $content = Parse::fromJSON($content);
-
-    return $content;
   }
 }
