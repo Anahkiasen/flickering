@@ -117,23 +117,25 @@ class Flickering
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Get the user's API key
+   * Get the API Consumer
    *
-   * @return string
+   * @return Consumer
    */
   public function getConsumer()
   {
     return $this->consumer;
   }
 
+  /**
+   * Get the currently authentified User
+   *
+   * @return User
+   */
   public function getUser()
   {
     if ($this->user) return $this->user;
 
-    $key    = $this->getSession()->get('oauth_token');
-    $secret = $this->getSession()->get('oauth_secret');
-
-    return $this->user = new OAuth\User($key, $secret);
+    return $this->user = $this->getSession()->get('flickering_oauth_user');
   }
 
   /**
@@ -163,6 +165,11 @@ class Flickering
   ////////////////////////////// OPAUTH //////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
+  /**
+   * Get the Opauth configuration to use for Flickering
+   *
+   * @return array
+   */
   private function getOpauthConfiguration()
   {
     $config = $this->getConfig()->get('opauth');
@@ -185,18 +192,15 @@ class Flickering
 
   /**
    * Process the post-authentification response
-   *
-   * @return [type] [description]
    */
   public function getOpauthCallback()
   {
     new Opauth($this->getOpauthConfiguration(), false);
 
+    // Store User credentials into session
     $response = unserialize(base64_decode($_POST['opauth']));
-    $this->getSession()->set('oauth_token', $response['auth']['credentials']['token']);
-    $this->getSession()->set('oauth_secret', $response['auth']['credentials']['secret']);
-
-    var_dump($response);
+    $user = new OAuth\User($response['auth']['credentials']['token'], $response['auth']['credentials']['secret']);
+    $this->getSession()->set('flickering_oauth_user', $user);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -234,35 +238,45 @@ class Flickering
   }
 
   /**
+   * Build a new IoC container
+   *
+   * @return Container
+   */
+  protected function buildContainer()
+  {
+    $container = new Container;
+
+    $container->bind('Filesystem', 'Illuminate\Filesystem\Filesystem');
+    $container->bind('FileLoader', function($container) {
+      return new FileLoader($container['Filesystem'], __DIR__.'/../..');
+    });
+
+    $container->bind('config', function($container) {
+      return new Repository($container['FileLoader'], 'config');
+    });
+
+    $container->bind('cache', function($container) {
+      return new FileStore($container->make('Filesystem'), __DIR__.'/../../cache');
+    });
+
+    $container->singleton('session', function($container) {
+      $session = new Session();
+      if (!$session->isStarted()) $session->start();
+
+      return $session;
+    });
+
+    return $container;
+  }
+
+  /**
    * Build required dependencies
    */
   protected function getDependency($dependency = null)
   {
     // If no Container available, build one
     if (!static::$container) {
-      $container = new Container;
-
-      $container->bind('Filesystem', 'Illuminate\Filesystem\Filesystem');
-      $container->bind('FileLoader', function($container) {
-        return new FileLoader($container['Filesystem'], __DIR__.'/../..');
-      });
-
-      $container->bind('config', function($container) {
-        return new Repository($container['FileLoader'], 'config');
-      });
-
-      $container->bind('cache', function($container) {
-        return new FileStore($container->make('Filesystem'), __DIR__.'/../../cache');
-      });
-
-      $container->singleton('session', function($container) {
-        $session = new Session();
-        if (!$session->isStarted()) $session->start();
-
-        return $session;
-      });
-
-      static::$container = $container;
+      static::$container = $this->buildContainer();
     }
 
     // If we provided a dependency, make it on the go
