@@ -25,10 +25,19 @@ class FlickeringTest extends FlickeringTests
   public function testCanUseMethodShortcuts()
   {
     $method = $this->getDummyFlickering();
-    $method = $method->photosetsGetList('photoset');
+    $method = $method->photosetsGetList('photoset', 10, 20);
+    $matcher = array(
+      'user_id'        => 'photoset',
+      'page'           => 10,
+      'per_page'       => 20,
+      'api_key'        => 'foo',
+      'format'         => 'json',
+      'method'         => 'flickr.photosets.getList',
+      'nojsoncallback' => 1
+    );
 
     $this->assertInstanceOf('Flickering\Method', $method);
     $this->assertEquals('flickr.photosets.getList', $method->getMethod());
-    $this->assertEquals(array('user_id' => 'photoset', 'page' => null, 'per_page' => null), $method->getParameters());
+    $this->assertEquals($matcher, $method->getParameters());
   }
 }
