@@ -13,6 +13,7 @@ use Illuminate\Config\Repository as Config;
 use Themattharris\TmhOAuth;
 use Underscore\Parse;
 use Underscore\Types\Arrays;
+use Underscore\Types\String;
 
 class Request
 {
@@ -67,8 +68,8 @@ class Request
     $this->user     = $user;
 
     // Dependencies
-    $this->cache      = $cache;
-    $this->config     = $config;
+    $this->cache  = $cache;
+    $this->config = $config;
 
     // Request parameters
     $this->parameters = $parameters;
@@ -78,6 +79,16 @@ class Request
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////// RESULTS /////////////////////////////
   ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the Request cache hash
+   *
+   * @return string
+   */
+  public function getHash()
+  {
+    return $this->hash;
+  }
 
   /**
    * Get the raw response from the Request
@@ -112,6 +123,21 @@ class Request
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Get the lifetime of the cache
+   *
+   * @return integer
+   */
+  public function getCacheLifetime()
+  {
+    // If cache disabled, always return false
+    if (!$this->config->get('config.cache.cache_requests')) {
+      return 0;
+    }
+
+    return (int) $this->config->get('config.cache.lifetime');
+  }
+
+  /**
    * Get the caching hash of the Method
    *
    * @param array $parameters The parameters to hash
@@ -127,21 +153,6 @@ class Request
     foreach ($parameters as $k => $v) $hash[] = $k.'-'.$v;
 
     return implode('-', $hash);
-  }
-
-  /**
-   * Get the lifetime of the cache
-   *
-   * @return integer
-   */
-  protected function getCacheLifetime()
-  {
-    // If cache disabled, always return false
-    if (!$this->config->get('config.cache.cache_requests')) {
-      return 0;
-    }
-
-    return (int) $this->config->get('config.cache.lifetime');
   }
 
   /**
@@ -165,9 +176,11 @@ class Request
         'user_secret'     => $_this->user->secret,
       ));
       $request->request('GET', $request->url(''), $_this->parameters);
+      $response = $request->response['response'];
 
       // Parse resulting content
-      $content = Parse::fromJSON($request->response['response']);
+      if (String::startsWith($response, '<?xml')) $content = Parse::fromXML($response);
+      else $content = Parse::fromJSON($response);
 
       return $content;
     });
