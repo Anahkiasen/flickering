@@ -6,7 +6,6 @@
  */
 namespace Flickering;
 
-use Flickering\Flickering;
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
 use Illuminate\Cache\FileStore as Cache;
@@ -17,13 +16,40 @@ use Underscore\Types\Arrays;
 
 class Request
 {
-  protected $apiKey;
-  protected $apiSecret;
-  protected $userToken;
-  protected $userSecret;
+  /**
+   * The OAuth Consumer
+   * @var Consumer
+   */
+  protected $consumer;
+
+  /**
+   * The OAuth User
+   * @var User
+   */
+  protected $user;
+
+  /**
+   * Instance of the Cache class
+   * @var Cache
+   */
   protected $cache;
+
+  /**
+   * Instance of the Config class
+   * @var Config
+   */
   protected $config;
+
+  /**
+   * The POST parameters to request
+   * @var array
+   */
   protected $parameters;
+
+  /**
+   * What to cache the request as
+   * @var string
+   */
   protected $hash;
 
   /**
@@ -37,10 +63,8 @@ class Request
   public function __construct($parameters, Consumer $consumer, User $user, Cache $cache, Config $config)
   {
     // OAuth
-    $this->apiKey     = $consumer->key;
-    $this->apiSecret  = $consumer->secret;
-    $this->userToken  = $user->key;
-    $this->userSecret = $user->secret;
+    $this->consumer = $consumer;
+    $this->user     = $user;
 
     // Dependencies
     $this->cache      = $cache;
@@ -117,11 +141,11 @@ class Request
       return 0;
     }
 
-    return $this->config->get('config.cache.lifetime');
+    return (int) $this->config->get('config.cache.lifetime');
   }
 
   /**
-   * Check if we can make the request and if it's cached
+   * Execute the Request against the API
    *
    * @return array
    */
@@ -130,15 +154,19 @@ class Request
     $_this = $this;
 
     return $this->cache->remember($this->hash, $this->getCacheLifetime(), function() use ($_this) {
+
+      // Create OAuth request
       $request = new TmhOAuth(array(
-        'consumer_key'    => $_this->apiKey,
-        'consumer_secret' => $_this->apiSecret,
+        'consumer_key'    => $_this->consumer->key,
+        'consumer_secret' => $_this->consumer->secret,
         'host'            => Flickering::API_URL,
         'use_ssl'         => false,
-        'user_token'      => $_this->userToken,
-        'user_secret'     => $_this->userSecret,
+        'user_token'      => $_this->user->key,
+        'user_secret'     => $_this->user->secret,
       ));
       $request->request('GET', $request->url(''), $_this->parameters);
+
+      // Parse resulting content
       $content = Parse::fromJSON($request->response['response']);
 
       return $content;

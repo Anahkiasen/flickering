@@ -6,7 +6,7 @@
  */
 namespace Flickering\Facades;
 
-use \Flickering\Flickering as FlickeringInstance;
+use Flickering\Flickering as FlickeringInstance;
 use Illuminate\Support\Facades\Facade;
 
 class Flickering extends Facade

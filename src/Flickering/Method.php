@@ -52,6 +52,8 @@ class Method
   ////////////////////////// PUBLIC INTERFACE ////////////////////////
   ////////////////////////////////////////////////////////////////////
 
+  // Request format ------------------------------------------------ /
+
   /**
    * Change the format of the method
    *
@@ -74,6 +76,8 @@ class Method
     return $this->format;
   }
 
+  // Informations about the method --------------------------------- /
+
   /**
    * Get the method being called
    *
@@ -94,6 +98,8 @@ class Method
     return $this->prepareParameters($this->parameters);
   }
 
+  // Method results ------------------------------------------------ /
+
   /**
    * Get the raw response from the Method
    *
@@ -105,7 +111,7 @@ class Method
   }
 
   /**
-   * Get the results of a method
+   * Get the actual results of a method
    *
    * @return Results
    */
@@ -129,8 +135,8 @@ class Method
       $this->getParameters(),
       $this->flickering->getConsumer(),
       $this->flickering->getUser(),
-      $this->flickering->getCache(),
-      $this->flickering->getConfig()
+      $this->flickering->getContainer()->getCache(),
+      $this->flickering->getContainer()->getConfig()
     );
   }
 

@@ -9,6 +9,4 @@ namespace Flickering;
 
 use Underscore\Types\Arrays;
 
-class Results extends Arrays
-{
-}
+class Results extends Arrays {}
