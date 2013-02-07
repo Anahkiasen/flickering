@@ -1,0 +1,29 @@
+<?php
+use Flickering\Facades\Flickering;
+use Underscore\Types\String;
+
+require '../vendor/autoload.php';
+
+// Authentificate with the API ------------------------------------- /
+
+Flickering::handshake();
+
+// Add OPauth authentification ------------------------------------- /
+
+// Get current request URI
+$currentRequest = String::remove($_SERVER['REQUEST_URI'], '{server}/flickering/example/');
+
+// If we're on the login page, or just came back from it, let Opauth handle it
+if ($currentRequest == '/flickr/' or String::startsWith($currentRequest, '/flickr/oauth_callback')) {
+  return Flickering::getOpauth();
+}
+
+// If Opauth just took us to the callback adress, launch callback method
+// to store user access token
+if ($currentRequest == '/flickr/callback') {
+  Flickering::getOpauthCallback();
+}
+
+// Go crazy -------------------------------------------------------- /
+
+$photos = Flickering::peopleGetPhotos('{user_id}')->getResults('photos');

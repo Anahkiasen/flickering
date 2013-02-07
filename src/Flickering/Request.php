@@ -71,10 +71,13 @@ class Request
    *
    * @return Results
    */
-  public function getResults()
+  public function getResults($subresults = null)
   {
     $results = $this->execute();
+
+    // Fetch results from sub-arrays
     $results = Results::from($results)->first();
+    if ($subresults) $results = $results->get($subresults);
 
     return $results;
   }
