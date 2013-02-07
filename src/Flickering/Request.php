@@ -22,8 +22,8 @@ class Request
    */
   public function __construct(Flickering $flickering, Method $method)
   {
-    $this->apiKey     = $flickering->getApiKey();
-    $this->apiSecret  = $flickering->getApiSecret();
+    $this->apiKey     = $flickering->getConsumer()->key;
+    $this->apiSecret  = $flickering->getConsumer()->secret;
     $this->url        = $flickering->getEndpoint();
     $this->userToken  = $flickering->getUserToken();
     $this->userSecret = $flickering->getUserSecret();

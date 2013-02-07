@@ -13,16 +13,16 @@ use Underscore\Types\Arrays;
 class Flickering
 {
   /**
-   * The API key
-   * @var string
+   * The API
+   * @var Consumer
    */
-  protected $key;
+  protected $consumer;
 
   /**
-   * The API secret key
-   * @var string
+   * The User
+   * @var User
    */
-  protected $secret;
+  protected $user;
 
   /**
    * The Flickr API endpoint
@@ -54,8 +54,10 @@ class Flickering
    */
   public function __construct($key = null, $secret = null)
   {
-    $this->key    = $key    ?: $this->getOption('api_key');
-    $this->secret = $secret ?: $this->getOption('api_secret');
+    $key    = $key    ?: $this->getOption('api_key');
+    $secret = $secret ?: $this->getOption('api_secret');
+
+    $this->consumer = new OAuth\Consumer($key, $secret);
   }
 
   /**
@@ -119,39 +121,19 @@ class Flickering
    *
    * @return string
    */
-  public function getApiKey()
+  public function getConsumer()
   {
-    return $this->key;
+    return $this->consumer;
   }
 
-  /**
-   * Get the user's API secret
-   *
-   * @return string
-   */
-  public function getApiSecret()
+  public function getUser()
   {
-    return $this->secret;
-  }
+    if ($this->user) return $this->user;
 
-  /**
-   * Get authentified user
-   *
-   * @return string
-   */
-  public function getUserToken()
-  {
-    return $this->getSession()->get('oauth_token');
-  }
+    $key    = $this->getSession()->get('oauth_token');
+    $secret = $this->getSession()->get('oauth_secret');
 
-  /**
-   * Get authentified user secret
-   *
-   * @return [type] [description]
-   */
-  public function getUserSecret()
-  {
-    return $this->getSession()->get('oauth_secret');
+    return $this->user = new OAuth\User($key, $secret);
   }
 
   /**

@@ -5,7 +5,7 @@ class FlickeringTest extends FlickeringTests
 {
   public function testCanBuildNewFlickeringInstance()
   {
-    $this->assertEquals('foo', $this->getDummyFlickering()->getApiKey());
+    $this->assertEquals('foo', $this->getDummyFlickering()->getConsumer()->key);
   }
 
   public function testCanReturnAMethodObject()

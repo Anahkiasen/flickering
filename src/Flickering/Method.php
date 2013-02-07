@@ -142,7 +142,7 @@ class Method
     return Arrays::from($parameters)
       ->merge(array(
         'method'         => $this->getMethod(),
-        'api_key'        => $this->flickering->getApiKey(),
+        'api_key'        => $this->flickering->getConsumer()->key,
         'format'         => $this->format,
         'nojsoncallback' => 1,
       ))
