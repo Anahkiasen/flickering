@@ -198,9 +198,11 @@ class Flickering
     new Opauth($this->getOpauthConfiguration(), false);
 
     // Store User credentials into session
-    $response = unserialize(base64_decode($_POST['opauth']));
-    $user = new OAuth\User($response['auth']['credentials']['token'], $response['auth']['credentials']['secret']);
-    $this->getSession()->set('flickering_oauth_user', $user);
+    if (isset($_POST['opauth'])) {
+      $response = unserialize(base64_decode($_POST['opauth']));
+      $user = new OAuth\User($response['auth']['credentials']['token'], $response['auth']['credentials']['secret']);
+      $this->getSession()->set('flickering_oauth_user', $user);
+    }
   }
 
   ////////////////////////////////////////////////////////////////////
