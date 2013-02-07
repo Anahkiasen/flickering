@@ -9,7 +9,7 @@ namespace Flickering\Facades;
 use Illuminate\Cache\FileStore;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository;
-use Illuminate\Container\Container as DependencyContainer;;
+use Illuminate\Container\Container as DependencyContainer;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class Container
