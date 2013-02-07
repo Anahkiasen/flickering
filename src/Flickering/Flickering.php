@@ -31,6 +31,7 @@ class Flickering
   protected $aliases = array(
     'photosetsGetList'   => array('user_id','page','per_page'),
     'photosetsGetPhotos' => array('photoset_id', 'extras', 'privacy_filter', 'per_page', 'page', 'media'),
+    'peopleGetPhotos'    => array('user_id', 'safe_search', 'min_upload_date', 'max_upload_date', 'min_taken_date', 'max_taken_date', 'content_type', 'privacy_filter', 'extras', 'per_page', 'page'),
   );
 
   /**
@@ -174,9 +175,21 @@ class Flickering
     return new Opauth($this->getOpauthConfiguration());
   }
 
+  /**
+   * Process the post-authentification response
+   *
+   * @return [type] [description]
+   */
   public function getOpauthCallback()
   {
-    $opauth = new Opauth($this->getOpauthConfiguration(), false);
+    new Opauth($this->getOpauthConfiguration(), false);
+
+    $response = unserialize(base64_decode($_POST['opauth']));
+    $this->getSession()->put('oauth_token', $response['auth']['credentials']['token']);
+    $this->getSession()->put('oauth_secret', $response['auth']['credentials']['secret']);
+    $this->getSession()->put('signature', $response['signature']);
+
+    var_dump($response);
   }
 
   ////////////////////////////////////////////////////////////////////
