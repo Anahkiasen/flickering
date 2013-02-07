@@ -1,9 +1,9 @@
 <?php return array(
 
   // Base paths
-  'path'           => '/autopergamene/public/',
-  'callback_url'   => '/autopergamene/public/flickr/callback',
-  'oauth_callback' => '/autopergamene/public/',
+  'path'           => '/_github/flickering/',
+  'callback_url'   => '{path}flickr/callback',
+  'oauth_callback' => '{path}',
   'callback_transport' => 'post',
 
   // Security salt
