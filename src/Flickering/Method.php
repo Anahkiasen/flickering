@@ -101,7 +101,7 @@ class Method
    */
   public function getResponse()
   {
-    return $this->getRequest()->getRawResponse();
+    return $this->createRequest()->getRawResponse();
   }
 
   /**
@@ -111,7 +111,7 @@ class Method
    */
   public function getResults()
   {
-    return $this->getRequest()->getResults();
+    return $this->createRequest()->getResults();
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -123,11 +123,15 @@ class Method
    *
    * @return Request
    */
-  protected function getRequest()
+  protected function createRequest()
   {
     return new Request(
-      $this->flickering,
-      $this);
+      $this->getParameters(),
+      $this->flickering->getConsumer(),
+      $this->flickering->getUser(),
+      $this->flickering->getCache(),
+      $this->flickering->getConfig()
+    );
   }
 
   /**

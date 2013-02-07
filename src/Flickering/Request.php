@@ -6,6 +6,9 @@
  */
 namespace Flickering;
 
+use Flickering\Flickering;
+use Flickering\OAuth\Consumer;
+use Flickering\OAuth\User;
 use Illuminate\Cache\FileStore as Cache;
 use Illuminate\Config\Repository as Config;
 use Themattharris\TmhOAuth;
@@ -14,42 +17,38 @@ use Underscore\Types\Arrays;
 
 class Request
 {
-  /**
-   * Make a new Request
-   *
-   * @param string $url  The URL
-   * @param array $post  POST parameters
-   */
-  public function __construct(Flickering $flickering, Method $method)
-  {
-    $this->apiKey     = $flickering->getConsumer()->key;
-    $this->apiSecret  = $flickering->getConsumer()->secret;
-    $this->url        = $flickering->getEndpoint();
-    $this->userToken  = $flickering->getUserToken();
-    $this->userSecret = $flickering->getUserSecret();
-    $this->parameters = $method->getParameters();
-    $this->flickering = $flickering;
-    $this->hash = $this->getHash($method);
-  }
+  protected $apiKey;
+  protected $apiSecret;
+  protected $userToken;
+  protected $userSecret;
+  protected $cache;
+  protected $config;
+  protected $parameters;
+  protected $hash;
 
   /**
-   * Get the caching hash of the Request
+   * Create a new Request
    *
-   * @param Method $method The Method to hash
-   *
-   * @return string
+   * @param array      $parameters The request POST parameters
+   * @param Consumer   $consumer   The Consumer
+   * @param User       $user       The User
+   * @param Flickering $flickering The Flickering instance
    */
-  protected function getHash(Method $method)
+  public function __construct($parameters, Consumer $consumer, User $user, Cache $cache, Config $config)
   {
-    $parameters = $this->parameters;
-    $parameters['method'] = $method->getMethod();
-    $parameters = Arrays::sortKeys($parameters);
-    $parameters = Arrays::clean($parameters);
+    // OAuth
+    $this->apiKey     = $consumer->key;
+    $this->apiSecret  = $consumer->secret;
+    $this->userToken  = $user->key;
+    $this->userSecret = $user->secret;
 
-    $hash = array();
-    foreach ($parameters as $k => $v) $hash[] = $k.'-'.$v;
+    // Dependencies
+    $this->cache      = $cache;
+    $this->config     = $config;
 
-    return implode('-', $hash);
+    // Request parameters
+    $this->parameters = $parameters;
+    $this->hash       = $this->createHashFromParameters($parameters);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -69,6 +68,8 @@ class Request
   /**
    * Get the results of the Request as a Results instance
    *
+   * @param string $subresults A subresult array to fetch from results
+   *
    * @return Results
    */
   public function getResults($subresults = null)
@@ -87,18 +88,36 @@ class Request
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Check if a cache of the request exists
+   * Get the caching hash of the Method
    *
-   * @return boolean
+   * @param array $parameters The parameters to hash
+   *
+   * @return string
+   */
+  protected function createHashFromParameters($parameters)
+  {
+    $parameters = Arrays::sortKeys($parameters);
+    $parameters = Arrays::clean($parameters);
+
+    $hash = array();
+    foreach ($parameters as $k => $v) $hash[] = $k.'-'.$v;
+
+    return implode('-', $hash);
+  }
+
+  /**
+   * Get the lifetime of the cache
+   *
+   * @return integer
    */
   protected function getCacheLifetime()
   {
     // If cache disabled, always return false
-    if (!$this->flickering->getConfig()->get('config.cache.cache_requests')) {
+    if (!$this->config->get('config.cache.cache_requests')) {
       return 0;
     }
 
-    return $this->flickering->getConfig()->get('config.cache.lifetime');
+    return $this->config->get('config.cache.lifetime');
   }
 
   /**
@@ -108,18 +127,18 @@ class Request
    */
   protected function execute()
   {
-    $me = $this;
+    $_this = $this;
 
-    return $this->flickering->getCache()->remember($this->hash, $this->getCacheLifetime(), function() use ($me) {
+    return $this->cache->remember($this->hash, $this->getCacheLifetime(), function() use ($_this) {
       $request = new TmhOAuth(array(
-        'consumer_key'    => $me->apiKey,
-        'consumer_secret' => $me->apiSecret,
-        'host'            => $me->url,
+        'consumer_key'    => $_this->apiKey,
+        'consumer_secret' => $_this->apiSecret,
+        'host'            => Flickering::API_URL,
         'use_ssl'         => false,
-        'user_token'      => $me->userToken,
-        'user_secret'     => $me->userSecret,
+        'user_token'      => $_this->userToken,
+        'user_secret'     => $_this->userSecret,
       ));
-      $request->request('GET', $request->url(''), $me->parameters);
+      $request->request('GET', $request->url(''), $_this->parameters);
       $content = Parse::fromJSON($request->response['response']);
 
       return $content;

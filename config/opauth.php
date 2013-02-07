@@ -1,7 +1,7 @@
 <?php return array(
 
   // Base paths
-  'path'           => '/_github/flickering/',
+  'path'           => '/_github/flickering/example/',
   'callback_url'   => '{path}flickr/callback',
   'oauth_callback' => '{path}',
   'callback_transport' => 'post',

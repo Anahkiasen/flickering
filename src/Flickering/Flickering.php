@@ -28,7 +28,7 @@ class Flickering
    * The Flickr API endpoint
    * @var string
    */
-  protected $endpoint = 'api.flickr.com/services/rest/?';
+  const API_URL = 'api.flickr.com/services/rest/?';
 
   /**
    * A list of method aliases and their arguments
@@ -143,7 +143,7 @@ class Flickering
    */
   public function getEndpoint()
   {
-    return $this->endpoint;
+    return Flickering::API_URL;
   }
 
   /**
@@ -167,8 +167,8 @@ class Flickering
   {
     $config = $this->getConfig()->get('opauth');
     $config['strategy_dir'] = __DIR__.'/../vendor/flickr';
-    $config['Strategy']['Flickr']['key'] = $this->key;
-    $config['Strategy']['Flickr']['secret'] = $this->secret;
+    $config['Strategy']['Flickr']['key'] = $this->consumer->key;
+    $config['Strategy']['Flickr']['secret'] = $this->consumer->secret;
 
     return $config;
   }
