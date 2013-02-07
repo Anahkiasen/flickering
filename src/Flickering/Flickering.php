@@ -176,6 +176,7 @@ class Flickering
     $config['strategy_dir'] = __DIR__.'/../vendor/flickr';
     $config['Strategy']['Flickr']['key'] = $this->consumer->key;
     $config['Strategy']['Flickr']['secret'] = $this->consumer->secret;
+    $config['callback_transport'] = 'post';
 
     return $config;
   }
