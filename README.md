@@ -1,19 +1,15 @@
-Flickering
-----------
+# Flickering [![Build Status](https://next.travis-ci.org/Anahkiasen/flickering.png?branch=master)](https://next.travis-ci.org/Anahkiasen/flickering)
 
-[![Build Status](https://next.travis-ci.org/Anahkiasen/flickering.png?branch=master)](https://next.travis-ci.org/Anahkiasen/flickering)
+Flickering is a next-generation PHP API for the [Flickr][] photos sharing social network.
+It's a **work in progress** but it already works so don't worry about that.
 
-Flickering is a next-generation PHP API for the _Flickr_ photos sharing social network. It's a **work in progress**.
-
-It's available on Composer and you can add it to your application like this :
+You can get it on Composer, in order to do so just add it to your application like this :
 
 ```json
 "anahkiasen/flickering": "dev-master"
 ```
 
-Using Flickering
-================
-
+## Using Flickering
 You can create a new instance of Flickering like this :
 
 ```php
@@ -43,10 +39,10 @@ $results = Flickering::callMethod('people.getInfo', array('user_id' => 'USERID')
 $results = Flickering::peopleGetInfo('USERID');
 ```
 
-Static interface
-================
+## Static interface
 
 Flickering also uses [Illuminate][]'s Facade component to provide a static interface to Flickering. You can create a new static instance of Flickering via the `Flickering::handshake($apiKey, $apiSecret)` method.
 
+[Flickr]: http://www.flickr.com/
 [Underscore.php]: http://anahkiasen.github.com/underscore-php
 [Illuminate]: https://github.com/illuminate/support
