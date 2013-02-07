@@ -17,7 +17,7 @@ class Flickering extends Facade
    * @param string $key    The API key
    * @param string $secret The API secret key
    */
-  public static function handshake($key, $secret)
+  public static function handshake($key = null, $secret = null)
   {
     static::$resolvedInstance['flickering'] = new FlickeringInstance($key, $secret);
   }

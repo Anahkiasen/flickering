@@ -26,4 +26,4 @@ if ($currentRequest == '/flickr/callback') {
 
 // Go crazy -------------------------------------------------------- /
 
-$photos = Flickering::peopleGetPhotos('{user_id}')->getResults('photos');
+// $photos = Flickering::peopleGetPhotos('{user_id}')->getResults('photos');
