@@ -76,7 +76,7 @@ class Flickering
       }, $method, 1);
 
       // Rebuild parameters array
-      foreach($argumentList as $key => $argument) {
+      foreach ($argumentList as $key => $argument) {
         $arguments[$argument] = Arrays::get($parameters, $key);
       }
 
