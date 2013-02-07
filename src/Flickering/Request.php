@@ -8,6 +8,7 @@ namespace Flickering;
 
 use Illuminate\Cache\FileStore as Cache;
 use Illuminate\Config\Repository as Config;
+use Themattharris\TmhOAuth;
 use Underscore\Parse;
 use Underscore\Types\Arrays;
 
@@ -19,13 +20,16 @@ class Request
    * @param string $url  The URL
    * @param array $post  POST parameters
    */
-  public function __construct(Cache $cache, Config $config, Method $method)
+  public function __construct(Flickering $flickering, Method $method)
   {
-    $this->cache      = $cache;
-    $this->config     = $config;
-    $this->url        = $method->getEndpoint();
+    $this->apiKey     = $flickering->getApiKey();
+    $this->apiSecret  = $flickering->getApiSecret();
+    $this->url        = $flickering->getEndpoint();
+    $this->userToken  = $flickering->getUserToken();
+    $this->userSecret = $flickering->getUserSecret();
     $this->parameters = $method->getParameters();
-    $this->hash       = $this->getHash($method);
+    $this->flickering = $flickering;
+    $this->hash = $this->getHash($method);
   }
 
   /**
@@ -84,14 +88,14 @@ class Request
    *
    * @return boolean
    */
-  protected function cacheExists()
+  protected function getCacheLifetime()
   {
     // If cache disabled, always return false
-    if (!$this->config->get('config.cache.cache_requests')) {
-      return false;
+    if (!$this->flickering->getConfig()->get('config.cache.cache_requests')) {
+      return 0;
     }
 
-    return $this->cache->has($this->hash);
+    return $this->flickering->getConfig()->get('config.cache.lifetime');
   }
 
   /**
@@ -101,16 +105,19 @@ class Request
    */
   protected function execute()
   {
-    if ($this->cacheExists()) return $this->cache->get($this->hash);
+    $me = $this;
 
-    // Prepare request
-    $url        = $this->url;
-    $parameters = $this->parameters;
-    $lifetime   = $this->config->get('config.cache.lifetime');
-
-    return $this->cache->remember($this->hash, $lifetime, function() use ($url, $parameters) {
-      $content = Helpers::curl($url, $parameters);
-      $content = Parse::fromJSON($content);
+    return $this->flickering->getCache()->remember($this->hash, $this->getCacheLifetime(), function() use ($me) {
+      $request = new TmhOAuth(array(
+        'consumer_key'    => $me->apiKey,
+        'consumer_secret' => $me->apiSecret,
+        'host'            => $me->url,
+        'use_ssl'         => false,
+        'user_token'      => $me->userToken,
+        'user_secret'     => $me->userSecret,
+      ));
+      $request->request('GET', $request->url(''), $me->parameters);
+      $content = Parse::fromJSON($request->response['response']);
 
       return $content;
     });

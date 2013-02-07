@@ -91,21 +91,7 @@ class Method
    */
   public function getParameters()
   {
-    return $this->parameters;
-  }
-
-  /**
-   * Get the Method's endpoint
-   *
-   * @return string
-   */
-  public function getEndpoint()
-  {
-    // Prepare and format parameters
-    $parameters = $this->prepareParameters($this->parameters);
-    $parameters = $this->inlineParameters($parameters);
-
-    return 'http://api.flickr.com/services/rest/?'.$parameters;
+    return $this->prepareParameters($this->parameters);
   }
 
   /**
@@ -140,8 +126,7 @@ class Method
   protected function getRequest()
   {
     return new Request(
-      $this->flickering->getCache(),
-      $this->flickering->getConfig(),
+      $this->flickering,
       $this);
   }
 
@@ -158,7 +143,6 @@ class Method
       ->merge(array(
         'method'         => $this->getMethod(),
         'api_key'        => $this->flickering->getApiKey(),
-        'user'           => $this->flickering->getUser(),
         'format'         => $this->format,
         'nojsoncallback' => 1,
       ))

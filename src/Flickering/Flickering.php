@@ -25,6 +25,12 @@ class Flickering
   protected $secret;
 
   /**
+   * The Flickr API endpoint
+   * @var string
+   */
+  protected $endpoint = 'api.flickr.com/services/rest/?';
+
+  /**
    * A list of method aliases and their arguments
    * @var array
    */
@@ -133,9 +139,29 @@ class Flickering
    *
    * @return string
    */
-  public function getUser()
+  public function getUserToken()
   {
-    return null;
+    return $this->getSession()->get('oauth_token');
+  }
+
+  /**
+   * Get authentified user secret
+   *
+   * @return [type] [description]
+   */
+  public function getUserSecret()
+  {
+    return $this->getSession()->get('oauth_secret');
+  }
+
+  /**
+   * Get the Flickr API endpoint
+   *
+   * @return string
+   */
+  public function getEndpoint()
+  {
+    return $this->endpoint;
   }
 
   /**
@@ -185,9 +211,8 @@ class Flickering
     new Opauth($this->getOpauthConfiguration(), false);
 
     $response = unserialize(base64_decode($_POST['opauth']));
-    $this->getSession()->put('oauth_token', $response['auth']['credentials']['token']);
-    $this->getSession()->put('oauth_secret', $response['auth']['credentials']['secret']);
-    $this->getSession()->put('signature', $response['signature']);
+    $this->getSession()->set('oauth_token', $response['auth']['credentials']['token']);
+    $this->getSession()->set('oauth_secret', $response['auth']['credentials']['secret']);
 
     var_dump($response);
   }
