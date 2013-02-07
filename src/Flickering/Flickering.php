@@ -168,13 +168,15 @@ class Flickering
    *
    * @return array
    */
-  private function getOpauthConfiguration()
+  protected function getOpauthConfiguration()
   {
     $config = $this->getContainer()->getConfig()->get('opauth');
-    $config['strategy_dir'] = __DIR__.'/../vendor/flickr';
-    $config['Strategy']['Flickr']['key'] = $this->consumer->key;
+
+    // Set additional configuration options
+    $config['strategy_dir']                 = __DIR__.'/../vendor/flickr';
+    $config['Strategy']['Flickr']['key']    = $this->consumer->key;
     $config['Strategy']['Flickr']['secret'] = $this->consumer->secret;
-    $config['callback_transport'] = 'post';
+    $config['callback_transport']           = 'post';
 
     return $config;
   }

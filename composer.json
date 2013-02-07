@@ -23,6 +23,9 @@
     "illuminate/config": "dev-master",
     "illuminate/support": "dev-master"
   },
+  "required-dev": {
+    "mockery/mockery": "dev-master"
+  },
   "repositories": [
     {
       "type": "vcs",
