@@ -21,13 +21,13 @@ class Request
    * The OAuth Consumer
    * @var Consumer
    */
-  protected $consumer;
+  public $consumer;
 
   /**
    * The OAuth User
    * @var User
    */
-  protected $user;
+  public $user;
 
   /**
    * Instance of the Cache class
