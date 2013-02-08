@@ -110,16 +110,43 @@ class Flickering
   }
 
   /**
-   * Directly get the results of a method
+   * Directly get raw response of Method
    *
    * @param string $method     The method name
    * @param array  $parameters Its parameters
    *
+   * @return string
+   */
+  public function getRawResponseOf($method, $parameters = array())
+  {
+    return $this->callMethod($method, $parameters)->getRawResponse();
+  }
+
+  /**
+   * Directly get response of Method
+   *
+   * @param string $method     The method name
+   * @param array  $parameters Its parameters
+   *
+   * @return array
+   */
+  public function getResponseOf($method, $parameters = array())
+  {
+    return $this->callMethod($method, $parameters)->getResponse();
+  }
+
+  /**
+   * Directly get the results of a method
+   *
+   * @param string $method     The method name
+   * @param array  $parameters Its parameters
+   * @param string $subresults Subresults to fetch
+   *
    * @return Results
    */
-  public function getResultsOf($method, $parameters = array())
+  public function getResultsOf($method, $parameters = array(), $subresults = null)
   {
-    return $this->callMethod($method, $parameters)->getResults();
+    return $this->callMethod($method, $parameters)->getResults($subresults);
   }
 
   ////////////////////////////////////////////////////////////////////

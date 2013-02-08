@@ -19,13 +19,13 @@ Once you have that, set it in Flickering's `config/config.php` file. Or if you d
 To start working with Flickering, create a new instance of it like the example underneath. If you set your API credentials in the config file, you don't need to pass any arguments to the constructor as it will automatically fetch your key and secret key from the config files.
 
 ```php
-$flickering = new Flickering($apiKey, $apiSecret);
+$flickering = new Flickering\Flickering($apiKey, $apiSecret);
 ```
 
 If working with instances is not your thing, Flickering also uses [Illuminate][]'s Facade component to provide a static interface to all its methods. You can create a new static instance of Flickering like this. Arguments are facultative if config file is set, same as above.
 
 ```php
-Flickering::handshake($apiKey, $apiSecret)
+Flickering\Facades\Flickering::handshake($apiKey, $apiSecret)
 ```
 
 The difference is that the static facade will always refer to the same instance of Flickering throughout all calls while creating an instance allows you to work with different API credentials in different places.
