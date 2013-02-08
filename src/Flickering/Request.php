@@ -21,13 +21,13 @@ class Request
    * The OAuth Consumer
    * @var Consumer
    */
-  public $consumer;
+  protected $consumer;
 
   /**
    * The OAuth User
    * @var User
    */
-  public $user;
+  protected $user;
 
   /**
    * Instance of the Cache class
@@ -172,27 +172,30 @@ class Request
    */
   protected function execute($parse = true)
   {
-    $_this = $this;
+    $user       = $this->user;
+    $consumer   = $this->consumer;
+    $parameters = $this->parameters;
 
-    return $this->cache->remember($this->hash, $this->getCacheLifetime(), function() use ($parse, $_this) {
+    return $this->cache->remember($this->hash, $this->getCacheLifetime(), function()
+      use ($parse, $user, $consumer, $parameters) {
 
       // Create OAuth request
       $request = new TmhOAuth(array(
-        'consumer_key'    => $_this->consumer->getKey(),
-        'consumer_secret' => $_this->consumer->getSecret(),
+        'consumer_key'    => $consumer->getKey(),
+        'consumer_secret' => $consumer->getSecret(),
         'host'            => Flickering::API_URL,
         'use_ssl'         => false,
-        'user_token'      => $_this->user->getKey(),
-        'user_secret'     => $_this->user->getSecret(),
+        'user_token'      => $user->getKey(),
+        'user_secret'     => $user->getSecret(),
       ));
-      $request->request('GET', $request->url(''), $_this->parameters);
+      $request->request('GET', $request->url(''), $parameters);
       $response = $request->response['response'];
 
       // Return raw if requested
       if (!$parse) return $response;
 
       // Parse resulting content
-      switch (Arrays::get($_this->parameters, 'format')) {
+      switch (Arrays::get($parameters, 'format')) {
         case 'json':
           return Parse::fromJSON($response);
         default:
