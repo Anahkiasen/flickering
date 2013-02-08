@@ -162,7 +162,7 @@ class Method
    */
   public function getResults($subresults = null)
   {
-    return $this->createRequest()->getResults($subresults = null);
+    return $this->createRequest()->getResults($subresults);
   }
 
   ////////////////////////////////////////////////////////////////////

@@ -123,6 +123,7 @@ class Request
 
     // Fetch results from sub-arrays
     $results = Results::from($results)->first();
+    var_dump($subresults);
     if ($subresults) $results = $results->get($subresults);
 
     return $results;
