@@ -160,22 +160,4 @@ class Method
       ->clean()
       ->obtain();
   }
-
-  /**
-   * Inline parameters for a GET request
-   *
-   * @param array $parameters The parameters
-   *
-   * @return string
-   */
-  protected function inlineParameters($parameters)
-  {
-    return Arrays::from($parameters)
-      ->each(function($value, $key) {
-        return $key. '=' .$value;
-      })
-      ->values()
-      ->implode('&')
-      ->obtain();
-  }
 }
