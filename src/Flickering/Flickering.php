@@ -10,6 +10,7 @@ namespace Flickering;
 use BadMethodCallException;
 use Opauth;
 use Underscore\Types\Arrays;
+use Flickering\Facades\Container;
 
 class Flickering
 {
@@ -40,13 +41,14 @@ class Flickering
   /**
    * Setup an instance of the API
    *
-   * @param string $key    The API key
-   * @param string $secret The API secret key
+   * @param string    $key       The API key
+   * @param string    $secret    The API secret key
    */
   public function __construct($key = null, $secret = null)
   {
-    $key    = $key    ?: $this->getOption('api_key');
-    $secret = $secret ?: $this->getOption('api_secret');
+    // Create Consumer
+    if (!$key)    $key    = $this->getOption('api_key');
+    if (!$secret) $secret = $this->getOption('api_secret');
 
     $this->consumer = new OAuth\Consumer($key, $secret);
   }
@@ -218,9 +220,19 @@ class Flickering
   public function getContainer()
   {
     if (!static::$container) {
-      static::$container = new Facades\Container;
+      static::$container = new Container;
     }
 
     return static::$container;
+  }
+
+  /**
+   * Replace the IoC Container
+   *
+   * @param Container $container
+   */
+  public function setContainer(Container $container)
+  {
+    static::$container = $container;
   }
 }

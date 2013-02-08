@@ -2,6 +2,7 @@
 use Flickering\Flickering;
 use Flickering\Method;
 use Flickering\Request;
+use Flickering\OAuth\User;
 
 abstract class FlickeringTests extends PHPUnit_Framework_TestCase
 {
@@ -46,6 +47,14 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
     $config->shouldReceive('get')->with('config.cache.lifetime')->andReturn(20);
 
     return $config;
+  }
+
+  protected function getSession()
+  {
+    $session = Mockery::mock('Session');
+    $session->shouldReceive('get')->with('flickering_oauth_user')->andReturn(new User('foo', 'bar'));
+
+    return $session;
   }
 
 }
