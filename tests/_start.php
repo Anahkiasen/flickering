@@ -65,7 +65,8 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
   protected function getSession()
   {
     $session = Mockery::mock('Session');
-    $session->shouldReceive('get')->with('flickering_oauth_user')->andReturn(new User('foo', 'bar'));
+    $session->shouldReceive('get')->with('flickering_oauth_user')->andReturn($this->getDummyUser());
+    $session->shouldReceive('has');
 
     return $session;
   }

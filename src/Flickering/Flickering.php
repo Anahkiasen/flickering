@@ -143,9 +143,12 @@ class Flickering
    */
   public function getUser()
   {
-    if ($this->user) return $this->user;
+    if ($this->isAuthentified() and $this->user) return $this->user;
 
-    return $this->user = $this->getContainer()->getSession()->get('flickering_oauth_user');
+    $user = $this->getContainer()->getSession()->get('flickering_oauth_user');
+    if (!$user) $user = new OAuth\User();
+
+    return $this->user = $user;
   }
 
   /**
@@ -215,7 +218,7 @@ class Flickering
       $response = unserialize(base64_decode($_POST['opauth']));
       $user = new OAuth\User($response['auth']);
 
-      $this->getSession()->set('flickering_oauth_user', $user);
+      $this->getContainer()->getSession()->set('flickering_oauth_user', $user);
     }
   }
 

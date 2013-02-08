@@ -79,6 +79,7 @@ The whole _Flickering > Method > Request_ process is bypassable via the matching
 $method = Flickering::callMethod('people.getPhotos', array('user_id' => '31667913@N06'))
 $results = $method->getResults('photos')
 
+// Same thing
 $results = Flickering::getResultsOf('people.getPhotos', array('user_id' => '31667913@N06'))
 ```
 

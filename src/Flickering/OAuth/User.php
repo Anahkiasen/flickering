@@ -33,7 +33,7 @@ class User extends Token
    *
    * @param array $response
    */
-  public function __construct($response)
+  public function __construct($response = null)
   {
     $response = (array) $response;
 
