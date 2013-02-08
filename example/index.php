@@ -8,7 +8,7 @@ require '../vendor/autoload.php';
 
 Flickering::handshake();
 
-// Add OPauth authentification ------------------------------------- /
+// Create a basic router to handle Opauth authentification --------- /
 
 // Get current request URI
 $currentRequest = String::remove($_SERVER['REQUEST_URI'], '{server}/flickering/example/');
@@ -26,4 +26,4 @@ if ($currentRequest == '/flickr/callback') {
 
 // Go crazy -------------------------------------------------------- /
 
-// $photos = Flickering::peopleGetPhotos('{user_id}')->getResults('photos');
+$photos = Flickering::peopleGetPhotos('{user_id}')->getResults('photos');
