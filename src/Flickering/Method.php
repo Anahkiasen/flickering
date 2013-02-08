@@ -6,6 +6,7 @@
  */
 namespace Flickering;
 
+use BadMethodCallException;
 use Underscore\Types\Arrays;
 use Underscore\Types\String;
 
@@ -52,12 +53,14 @@ class Method
    * Elegant aliases for setting parameters
    *
    * @param string $method     The method
-   * @param array $parameters  Its arguments
+   * @param array  $parameters  Its arguments
    */
   public function __call($method, $parameters)
   {
-    if ($realParameter = $this->elegantlySetParameter($method, $parameters)) {
+    if ($realParameter = $this->getRealParameter($method)) {
       $this->setParameter($realParameter, $parameters[0]);
+    } else {
+      throw new BadMethodCallException('The method "' .$method. '" does not exist on the Method object');
     }
 
     return $this;
@@ -101,7 +104,7 @@ class Method
   /**
    * Set a parameter with a method alias
    */
-  protected function elegantlySetParameter($method, $parameters)
+  protected function getRealParameter($method)
   {
     if (!String::startsWith($method, 'set')) return false;
 

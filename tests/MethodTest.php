@@ -66,4 +66,12 @@ class MethodTest extends FlickeringTests
     $parameters = $method->getParameters();
     $this->assertEquals('changed', $parameters['api_key']);
   }
+
+  public function testCantCallWhateverYouWantOnMethodsGodDammit()
+  {
+    $this->setExpectedException('BadMethodCallException');
+
+    $method = $this->getDummyMethod();
+    $method->iLikeBigButts('and I cannot lie');
+  }
 }
