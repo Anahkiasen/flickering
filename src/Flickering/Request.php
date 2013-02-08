@@ -179,10 +179,12 @@ class Request
       $response = $request->response['response'];
 
       // Parse resulting content
-      if (String::startsWith($response, '<?xml')) $content = Parse::fromXML($response);
-      else $content = Parse::fromJSON($response);
-
-      return $content;
+      switch (Arrays::get($_this->parameters, 'format')) {
+        case 'json':
+          return Parse::fromJSON($response);
+        default:
+          return Parse::fromXML($response);
+      }
     });
   }
 }
