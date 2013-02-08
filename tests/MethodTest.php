@@ -29,7 +29,7 @@ class MethodTest extends FlickeringTests
       'nojsoncallback' => 1
     );
 
-    $this->assertEquals($matcher, $method->getParameters());
+    $this->assertEquals($matcher, $method->getPreparedParameters());
   }
 
   public function testCanExecuteRequests()
@@ -47,5 +47,23 @@ class MethodTest extends FlickeringTests
     $method = $method['message'];
 
     $this->assertEquals('Method "flickr.photos.getPhotos" not found', $method);
+  }
+
+  public function testCanSetParameters()
+  {
+    $method = $this->getDummyMethod();
+    $method->setParameter('api_key', 'changed');
+
+    $parameters = $method->getParameters();
+    $this->assertEquals('changed', $parameters['api_key']);
+  }
+
+  public function testCanElegantlySetParameters($value='')
+  {
+    $method = $this->getDummyMethod();
+    $method->setApiKey('changed');
+
+    $parameters = $method->getParameters();
+    $this->assertEquals('changed', $parameters['api_key']);
   }
 }

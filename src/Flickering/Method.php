@@ -48,6 +48,66 @@ class Method
     $this->parameters = $parameters;
   }
 
+  /**
+   * Elegant aliases for setting parameters
+   *
+   * @param string $method     The method
+   * @param array $parameters  Its arguments
+   */
+  public function __call($method, $parameters)
+  {
+    if ($realParameter = $this->elegantlySetParameter($method, $parameters)) {
+      $this->setParameter($realParameter, $parameters[0]);
+    }
+
+    return $this;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// PARAMETERS ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the Method parameters
+   *
+   * @return array
+   */
+  public function getParameters()
+  {
+    return $this->parameters;
+  }
+
+  /**
+   * Get the prepared Method parameters
+   *
+   * @return array
+   */
+  public function getPreparedParameters()
+  {
+    return $this->prepareParameters($this->parameters);
+  }
+
+  /**
+   * Set a parameter on the Method
+   *
+   * @param string $key   The key of the parameter
+   * @param mixed  $value Its value
+   */
+  public function setParameter($key, $value)
+  {
+    $this->parameters[$key] = $value;
+  }
+
+  /**
+   * Set a parameter with a method alias
+   */
+  protected function elegantlySetParameter($method, $parameters)
+  {
+    if (!String::startsWith($method, 'set')) return false;
+
+    return String::from($method)->remove('set')->lcfirst()->toSnakeCase()->obtain();
+  }
+
   ////////////////////////////////////////////////////////////////////
   ////////////////////////// PUBLIC INTERFACE ////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -88,16 +148,6 @@ class Method
     return 'flickr.'.$this->method;
   }
 
-  /**
-   * Get the Method parameters
-   *
-   * @return array
-   */
-  public function getParameters()
-  {
-    return $this->prepareParameters($this->parameters);
-  }
-
   // Method results ------------------------------------------------ /
 
   /**
@@ -132,7 +182,7 @@ class Method
   protected function createRequest()
   {
     return new Request(
-      $this->getParameters(),
+      $this->getPreparedParameters(),
       $this->flickering->getConsumer(),
       $this->flickering->getUser(),
       $this->flickering->getContainer()->getCache(),

@@ -38,6 +38,6 @@ class FlickeringTest extends FlickeringTests
 
     $this->assertInstanceOf('Flickering\Method', $method);
     $this->assertEquals('flickr.photosets.getList', $method->getMethod());
-    $this->assertEquals($matcher, $method->getParameters());
+    $this->assertEquals($matcher, $method->getPreparedParameters());
   }
 }
