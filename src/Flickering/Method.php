@@ -160,9 +160,9 @@ class Method
    *
    * @return Results
    */
-  public function getResults()
+  public function getResults($subresults = null)
   {
-    return $this->createRequest()->getResults();
+    return $this->createRequest()->getResults($subresults = null);
   }
 
   ////////////////////////////////////////////////////////////////////
