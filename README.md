@@ -104,6 +104,28 @@ Route::get('flickr/callback', function() {
 
 If you're using any framework and just want to make some requests on a plain old PHP page, an example implementation via a basic router and _.htaccess_ is demonstrated in the `example` folder of the repository.
 
+### Working with the User
+
+Once the user has been logged in you can get its informations via the `Flickering::getUser()` method which will return an **User** object containing the various informations sent back by the OAuth process. Here are some of the methods available :
+
+```php
+$user = Flickering::getUser();
+
+// Get OAuth token
+$user->getKey()
+
+// Get Flickr's UID of the person
+$user->getUid()
+
+// Get an array of basic informations on the person
+$user->getInformations()
+
+// Get the whole schebang : photos, photosets, friends, and other informations made public by the user
+$user->getPerson()
+```
+
+Moreover, Flickering has a `isAuthentified` method for you to use that will check whether OAuth credentials are available or not.
+
 ## That's all folks !
 
 Don't forget to post any issue/bug/request in the Github Issues.
