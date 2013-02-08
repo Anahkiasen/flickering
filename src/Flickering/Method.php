@@ -111,8 +111,7 @@ class Method
   protected function getRealParameter($parameter)
   {
     return String::from($parameter)
-      ->remove('set')
-      ->remove('get')
+      ->substr(3)
       ->lcfirst()
       ->toSnakeCase()
       ->obtain();
