@@ -149,6 +149,16 @@ class Flickering
   }
 
   /**
+   * Check if we have an authentified User
+   *
+   * @return boolean
+   */
+  public function isAuthentified()
+  {
+    return $this->getContainer()->getSession()->has('flickering_oauth_user');
+  }
+
+  /**
    * Get an option from the config file
    *
    * @param string $option   The option to fetch
