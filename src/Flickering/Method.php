@@ -136,17 +136,27 @@ class Method
   // Method results ------------------------------------------------ /
 
   /**
-   * Get the raw response from the Method
+   * Get the parsed response from the Request
    *
    * @return array
    */
   public function getResponse()
   {
+    return $this->createRequest()->getResponse();
+  }
+
+  /**
+   * Get the raw response from the Request
+   *
+   * @return string
+   */
+  public function getRawResponse()
+  {
     return $this->createRequest()->getRawResponse();
   }
 
   /**
-   * Get the actual results of a method
+   * Get the actual results of a Request
    *
    * @return Results
    */

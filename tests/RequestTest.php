@@ -37,9 +37,19 @@ class RequestTest extends FlickeringTests
     $request = $this->getDummyRequest(array(
       'method' => 'flickr.photos.getPhotos',
     ));
-    $request = $request->getRawResponse();
+    $request = $request->getResponse();
     $request = $request['err']['@attributes']['msg'];
 
     $this->assertEquals('Method "flickr.photos.getPhotos" not found', $request);
+  }
+
+  public function testCanGetRawResponse()
+  {
+    $request = $this->getDummyRequest(array(
+      'method' => 'flickr.photos.getPhotos',
+    ));
+    $request = $request->getRawResponse();
+
+    $this->assertContains('<?xml', $request);
   }
 }

@@ -91,13 +91,23 @@ class Request
   }
 
   /**
-   * Get the raw response from the Request
+   * Get the parsed response from the Request
    *
    * @return array
    */
-  public function getRawResponse()
+  public function getResponse()
   {
     return $this->execute();
+  }
+
+  /**
+   * Get the raw response from the Request
+   *
+   * @return string
+   */
+  public function getRawResponse()
+  {
+    return $this->execute(false);
   }
 
   /**
@@ -160,11 +170,11 @@ class Request
    *
    * @return array
    */
-  protected function execute()
+  protected function execute($parse = true)
   {
     $_this = $this;
 
-    return $this->cache->remember($this->hash, $this->getCacheLifetime(), function() use ($_this) {
+    return $this->cache->remember($this->hash, $this->getCacheLifetime(), function() use ($parse, $_this) {
 
       // Create OAuth request
       $request = new TmhOAuth(array(
@@ -177,6 +187,9 @@ class Request
       ));
       $request->request('GET', $request->url(''), $_this->parameters);
       $response = $request->response['response'];
+
+      // Return raw if requested
+      if (!$parse) return $response;
 
       // Parse resulting content
       switch (Arrays::get($_this->parameters, 'format')) {
