@@ -12,13 +12,13 @@ abstract class Token
    * His token
    * @var string
    */
-  public $key;
+  protected $key;
 
   /**
    * His secret
    * @var string
    */
-  public $secret;
+  protected $secret;
 
   /**
    * Create new User
@@ -30,5 +30,25 @@ abstract class Token
   {
     $this->key    = $key;
     $this->secret = $secret;
+  }
+
+  /**
+   * Get token
+   *
+   * @return string
+   */
+  public function getKey()
+  {
+    return $this->key;
+  }
+
+  /**
+   * Get secret key
+   *
+   * @return string
+   */
+  public function getSecret()
+  {
+    return $this->secret;
   }
 }

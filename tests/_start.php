@@ -3,6 +3,7 @@ use Flickering\Flickering;
 use Flickering\Method;
 use Flickering\Request;
 use Flickering\OAuth\User;
+use Flickering\OAuth\Consumer;
 
 abstract class FlickeringTests extends PHPUnit_Framework_TestCase
 {
@@ -16,10 +17,18 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
     return new Method($this->getDummyFlickering(), 'foobar', array('foo' => 'bar'));
   }
 
+  protected function getDummyUser()
+  {
+    return new User(array(
+      'credentials' => array(
+        'token' => 'foo',
+        'secret' => 'bar')));
+  }
+
   protected function getDummyRequest($parameters = array(), $config = null)
   {
-    $user     = Mockery::mock('Flickering\OAuth\User');
-    $consumer = Mockery::mock('Flickering\OAuth\Consumer');
+    $user     = $this->getDummyUser();
+    $consumer = new Consumer('foo', 'bar');
     $cache    = $this->getCache();
     if (!$config) $config = $this->getConfig();
 

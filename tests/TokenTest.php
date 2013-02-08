@@ -5,10 +5,15 @@ class TokenTest extends FlickeringTests
 {
   public function testCanSetAndGetKeys()
   {
-    $token = new User('foo', 'bar');
+    $token = new User(array(
+      'credentials' => array(
+        'token' => 'foo',
+        'secret' => 'bar')
+      )
+    );
 
-    $this->assertEquals('foo', $token->key);
-    $this->assertEquals('bar', $token->secret);
+    $this->assertEquals('foo', $token->getKey());
+    $this->assertEquals('bar', $token->getSecret());
 
   }
 }

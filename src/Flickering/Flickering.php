@@ -176,8 +176,8 @@ class Flickering
 
     // Set additional configuration options
     $config['strategy_dir']                 = __DIR__.'/../vendor/flickr';
-    $config['Strategy']['Flickr']['key']    = $this->consumer->key;
-    $config['Strategy']['Flickr']['secret'] = $this->consumer->secret;
+    $config['Strategy']['Flickr']['key']    = $this->consumer->getKey();
+    $config['Strategy']['Flickr']['secret'] = $this->consumer->getSecret();
     $config['callback_transport']           = 'post';
 
     return $config;
@@ -203,7 +203,8 @@ class Flickering
     // Store User credentials into session
     if (isset($_POST['opauth'])) {
       $response = unserialize(base64_decode($_POST['opauth']));
-      $user = new OAuth\User($response['auth']['credentials']['token'], $response['auth']['credentials']['secret']);
+      $user = new OAuth\User($response['auth']);
+
       $this->getSession()->set('flickering_oauth_user', $user);
     }
   }

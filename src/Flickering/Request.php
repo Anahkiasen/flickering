@@ -178,12 +178,12 @@ class Request
 
       // Create OAuth request
       $request = new TmhOAuth(array(
-        'consumer_key'    => $_this->consumer->key,
-        'consumer_secret' => $_this->consumer->secret,
+        'consumer_key'    => $_this->consumer->getKey(),
+        'consumer_secret' => $_this->consumer->getSecret(),
         'host'            => Flickering::API_URL,
         'use_ssl'         => false,
-        'user_token'      => $_this->user->key,
-        'user_secret'     => $_this->user->secret,
+        'user_token'      => $_this->user->getKey(),
+        'user_secret'     => $_this->user->getSecret(),
       ));
       $request->request('GET', $request->url(''), $_this->parameters);
       $response = $request->response['response'];
