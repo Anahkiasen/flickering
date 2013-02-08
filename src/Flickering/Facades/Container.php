@@ -51,7 +51,7 @@ class Container
    */
   public function getCache()
   {
-    return $this->getDependency('cache');
+    return $this->container->make('cache');
   }
 
   /**
@@ -61,7 +61,7 @@ class Container
    */
   public function getConfig()
   {
-    return $this->getDependency('config');
+    return $this->container->make('config');
   }
 
   /**
@@ -71,27 +71,6 @@ class Container
    */
   public function getSession()
   {
-    return $this->getDependency('session');
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////// CORE METHODS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Build required dependencies
-   *
-   * @param string $dependency A dependency to fretch from the container
-   *
-   * @return Container
-   */
-  protected function getDependency($dependency = null)
-  {
-    // If we provided a dependency, make it on the go
-    if ($dependency) {
-      return $this->container->make($dependency);
-    }
-
-    return $this->container;
+    return $this->container->make('session');
   }
 }
