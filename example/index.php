@@ -11,7 +11,7 @@ Flickering::handshake();
 // Create a basic router to handle Opauth authentification --------- /
 
 // Get current request URI
-$currentRequest = String::remove($_SERVER['REQUEST_URI'], '{server}/flickering/example/');
+$currentRequest = String::remove($_SERVER['REQUEST_URI'], '/flickering/example/');
 
 // If we're on the login page, or just came back from it, let Opauth handle it
 if ($currentRequest == '/flickr/' or String::startsWith($currentRequest, '/flickr/oauth_callback')) {
@@ -24,6 +24,15 @@ if ($currentRequest == '/flickr/callback') {
   Flickering::getOpauthCallback();
 }
 
+// Display login link if not authentified
+if (!Flickering::isAuthentified()) {
+  echo '<a href="flickr/">Login to Flickr</a>';
+  exit();
+}
+
 // Go crazy -------------------------------------------------------- /
 
-$photos = Flickering::peopleGetPhotos('{user_id}')->getResults('photos');
+$userUid = Flickering::getUser()->getUid();
+$photos  = Flickering::peopleGetPhotos($userUid)->getResults('photo');
+
+var_dump($photos->obtain());
