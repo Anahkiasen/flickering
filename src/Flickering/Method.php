@@ -50,15 +50,19 @@ class Method
   }
 
   /**
-   * Elegant aliases for setting parameters
+   * Elegant aliases for setting/getting parameters
    *
-   * @param string $method     The method
-   * @param array  $parameters  Its arguments
+   * @param string $method     The parameter
+   * @param array  $parameters Its value
    */
   public function __call($method, $parameters)
   {
-    if ($realParameter = $this->getRealParameter($method)) {
+    $realParameter = $this->getRealParameter($method);
+
+    if (String::startsWith($method, 'set')) {
       $this->setParameter($realParameter, $parameters[0]);
+    } elseif (String::startsWith($method, 'get')) {
+      return Arrays::get($this->parameters, $realParameter);
     } else {
       throw new BadMethodCallException('The method "' .$method. '" does not exist on the Method object');
     }
@@ -104,40 +108,19 @@ class Method
   /**
    * Set a parameter with a method alias
    */
-  protected function getRealParameter($method)
+  protected function getRealParameter($parameter)
   {
-    if (!String::startsWith($method, 'set')) return false;
-
-    return String::from($method)->remove('set')->lcfirst()->toSnakeCase()->obtain();
+    return String::from($parameter)
+      ->remove('set')
+      ->remove('get')
+      ->lcfirst()
+      ->toSnakeCase()
+      ->obtain();
   }
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////// PUBLIC INTERFACE ////////////////////////
   ////////////////////////////////////////////////////////////////////
-
-  // Request format ------------------------------------------------ /
-
-  /**
-   * Change the format of the method
-   *
-   * @param string $format The format
-   */
-  public function setFormat($format)
-  {
-    $this->format = $format;
-
-    return $this;
-  }
-
-  /**
-   * Get the format of the method
-   *
-   * @return string
-   */
-  public function getFormat()
-  {
-    return $this->format;
-  }
 
   // Informations about the method --------------------------------- /
 

@@ -74,4 +74,12 @@ class MethodTest extends FlickeringTests
     $method = $this->getDummyMethod();
     $method->iLikeBigButts('and I cannot lie');
   }
+
+  public function testCanElegantlyGetParameters()
+  {
+    $method = $this->getDummyMethod();
+    $method->setApiKey('changed');
+
+    $this->assertEquals('changed', $method->getApiKey());
+  }
 }
