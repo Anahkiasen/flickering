@@ -10,7 +10,7 @@ use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
 use Illuminate\Cache\FileStore as Cache;
 use Illuminate\Config\Repository as Config;
-use Themattharris\TmhOAuth;
+use tmhOAuth;
 use Underscore\Parse;
 use Underscore\Types\Arrays;
 use Underscore\Types\String;
