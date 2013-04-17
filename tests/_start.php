@@ -12,10 +12,11 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
   {
     $this->flickering = new Flickering('foo', 'bar');
 
+    $dummyUser = $this->getDummyUser();
     $container = $this->flickering->getContainer();
-    $container->bind('session', function() {
+    $container->bind('session', function() use ($dummyUser) {
       $session = Mockery::mock('Session');
-      $session->shouldReceive('get')->with('flickering_oauth_user')->andReturn($this->getDummyUser());
+      $session->shouldReceive('get')->with('flickering_oauth_user')->andReturn($dummyUser);
       $session->shouldReceive('has');
 
       return $session;
