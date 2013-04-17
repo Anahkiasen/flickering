@@ -8,7 +8,7 @@ namespace Flickering;
 
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
-use Illuminate\Cache\FileStore as Cache;
+use Illuminate\Cache\Repository as Cache;
 use Illuminate\Config\Repository as Config;
 use tmhOAuth;
 use Underscore\Parse;
@@ -176,7 +176,7 @@ class Request
     $consumer   = $this->consumer;
     $parameters = $this->parameters;
 
-    return $this->cache->remember($this->hash, $this->getCacheLifetime(), function()
+    return $this->cache->remember($parse.$this->hash, $this->getCacheLifetime(), function()
       use ($parse, $user, $consumer, $parameters) {
 
       // Create OAuth request

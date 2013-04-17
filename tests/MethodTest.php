@@ -34,13 +34,7 @@ class MethodTest extends FlickeringTests
 
   public function testCanExecuteRequests()
   {
-    $container = Mockery::mock('Flickering\Facades\Container');
-    $container->shouldReceive('getSession')->andReturn($this->getSession());
-    $container->shouldReceive('getCache')->andReturn($this->getCache());
-    $container->shouldReceive('getConfig')->andReturn($this->getConfig());
-
-    $flickering = $this->getDummyFlickering();
-    $flickering->setContainer($container);
+    $flickering = $this->flickering;
     $method = $flickering->callMethod('photos.getPhotos', array('foo' => 'bar'));
 
     $method = $method->getResponse();

@@ -8,9 +8,15 @@
 namespace Flickering;
 
 use BadMethodCallException;
+use Illuminate\Cache\FileStore;
+use Illuminate\Config\FileLoader;
+use Illuminate\Cache\Repository as CacheRepository;
+use Illuminate\Config\Repository;
+use Illuminate\Container\Container as DependencyContainer;
+use Illuminate\Container\Container;
 use Opauth;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Underscore\Types\Arrays;
-use Flickering\Facades\Container;
 
 class Flickering
 {
@@ -61,8 +67,8 @@ class Flickering
   public function __call($method, $parameters)
   {
     // Catch aliased calls
-    if ($method = $this->callMethodByAlias($method, $parameters)) {
-      return $method;
+    if ($alias = $this->callMethodByAlias($method, $parameters)) {
+      return $alias;
     }
 
     throw new BadMethodCallException('The requested method "' .$method. '" does not exist');
@@ -91,9 +97,9 @@ class Flickering
    */
   protected function callMethodByAlias($method, $parameters)
   {
-    $aliases = $this->getContainer()->getConfig()->get('methods');
+    $aliases = $this->getContainer('config')->get('methods');
 
-    if (!array_key_exists($method, $aliases)) return false;
+    if (!$aliases or !array_key_exists($method, $aliases)) return false;
 
     // Get actual method name and arguments
     $argumentList = $aliases[$method];
@@ -172,7 +178,7 @@ class Flickering
   {
     if ($this->isAuthentified() and $this->user) return $this->user;
 
-    $user = $this->getContainer()->getSession()->get('flickering_oauth_user');
+    $user = $this->getContainer('session')->get('flickering_oauth_user');
     if (!$user) $user = new OAuth\User();
 
     return $this->user = $user;
@@ -185,7 +191,7 @@ class Flickering
    */
   public function isAuthentified()
   {
-    return $this->getContainer()->getSession()->has('flickering_oauth_user');
+    return $this->getContainer('session')->has('flickering_oauth_user');
   }
 
   /**
@@ -198,7 +204,7 @@ class Flickering
    */
   public function getOption($option, $fallback = null)
   {
-    return $this->getContainer()->getConfig()->get('config.'.$option, $fallback);
+    return $this->getContainer('config')->get('config.'.$option, $fallback);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -212,7 +218,7 @@ class Flickering
    */
   protected function getOpauthConfiguration()
   {
-    $config = $this->getContainer()->getConfig()->get('opauth');
+    $config = $this->getContainer('config')->get('opauth');
 
     // Set additional configuration options
     $config['strategy_dir']                 = __DIR__.'/../vendor/flickr';
@@ -245,7 +251,7 @@ class Flickering
       $response = unserialize(base64_decode($_POST['opauth']));
       $user = new OAuth\User($response['auth']);
 
-      $this->getContainer()->getSession()->set('flickering_oauth_user', $user);
+      $this->getContainer('session')->set('flickering_oauth_user', $user);
     }
   }
 
@@ -256,12 +262,18 @@ class Flickering
   /**
    * Get the IoC Container
    *
+   * @param  string $make A dependency to make on the go
+   *
    * @return Container
    */
-  public function getContainer()
+  public function getContainer($make = null)
   {
     if (!static::$container) {
-      static::$container = new Container;
+      static::$container = $this->makeContainer();
+    }
+
+    if ($make) {
+      return static::$container[$make];
     }
 
     return static::$container;
@@ -275,5 +287,39 @@ class Flickering
   public function setContainer(Container $container)
   {
     static::$container = $container;
+  }
+
+  /**
+   * Create a new IoC Container
+   *
+   * @return Container
+   */
+  protected function makeContainer()
+  {
+    $container = new Container;
+
+    $container->bindIf('Filesystem', 'Illuminate\Filesystem\Filesystem');
+    $container->bindIf('FileLoader', function($container) {
+      return new FileLoader($container['Filesystem'], __DIR__.'/../..');
+    });
+
+    $container->bindIf('config', function($container) {
+      return new Repository($container['FileLoader'], 'config');
+    });
+
+    $container->bindIf('cache', function($container) {
+      $fileStore = new FileStore($container['Filesystem'], __DIR__.'/../../cache');
+
+      return new CacheRepository($fileStore);
+    });
+
+    $container->singleton('session', function($container) {
+      $session = new Session;
+      if (!$session->isStarted()) $session->start();
+
+      return $session;
+    });
+
+    return $container;
   }
 }

@@ -180,8 +180,8 @@ class Method
       $this->getPreparedParameters(),
       $this->flickering->getConsumer(),
       $this->flickering->getUser(),
-      $this->flickering->getContainer()->getCache(),
-      $this->flickering->getContainer()->getConfig()
+      $this->flickering->getContainer('cache'),
+      $this->flickering->getContainer('config')
     );
   }
 
