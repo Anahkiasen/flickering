@@ -27,12 +27,6 @@
   "require-dev": {
     "mockery/mockery": "dev-master"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/pocket7878/opauth-flickr.git"
-    }
-  ],
   "autoload": {
     "psr-0": {
       "Flickering": "src/"
