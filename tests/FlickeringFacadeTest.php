@@ -1,6 +1,4 @@
 <?php
-include '_start.php';
-
 use Flickering\Facades\Flickering;
 
 class FlickeringFacadeTest extends FlickeringTests

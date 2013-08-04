@@ -1,13 +1,17 @@
 <?php
+require __DIR__.'/../vendor/autoload.php';
+
 use Flickering\Flickering;
 use Flickering\Method;
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
 use Flickering\Request;
 
+/**
+ * Set up the Flickering tests
+ */
 abstract class FlickeringTests extends PHPUnit_Framework_TestCase
 {
-
   public function setUp()
   {
     $this->flickering = new Flickering('foo', 'bar');
@@ -51,5 +55,4 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
 
     return new Request($parameters, $consumer, $user, $cache, $config);
   }
-
 }
