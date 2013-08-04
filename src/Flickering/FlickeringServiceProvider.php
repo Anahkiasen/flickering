@@ -93,30 +93,30 @@ class FlickeringServiceProvider extends ServiceProvider
 	 */
 	public function bindCoreClasses(Container $app)
 	{
-	  $app->bindIf('request', function ($app) {
-      return Request::createFromGlobals();
-    }, true);
+		$app->bindIf('request', function ($app) {
+			return Request::createFromGlobals();
+		}, true);
 
-    $app->bindIf('config', function ($app) {
+		$app->bindIf('config', function ($app) {
 			$fileloader = new FileLoader(new Filesystem, __DIR__.'/../config');
 
 			return new Config($fileloader, 'config');
-    }, true);
+		}, true);
 
-    $app->bindIf('cache', function($app) {
-      $fileStore = new FileStore(new Filesystem, __DIR__.'/../../cache');
+		$app->bindIf('cache', function($app) {
+			$fileStore = new FileStore(new Filesystem, __DIR__.'/../../cache');
 
-      return new Cache($fileStore);
-    });
+			return new Cache($fileStore);
+		});
 
-    $app->bindIf('session', function ($app) {
-    	return new Session;
-    }, true);
+		$app->bindIf('session', function ($app) {
+			return new Session;
+		}, true);
 
-    // Register config file
+		// Register config file
 		$app['config']->package('anahkiasen/flickering', __DIR__.'/../config');
 
-    return $app;
+		return $app;
 	}
 
 	/**
