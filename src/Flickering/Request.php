@@ -1,9 +1,4 @@
 <?php
-/**
- * Request
- *
- * Sends requests against the API
- */
 namespace Flickering;
 
 use Flickering\OAuth\Consumer;
@@ -15,6 +10,9 @@ use Underscore\Parse;
 use Underscore\Types\Arrays;
 use Underscore\Types\String;
 
+/**
+ * Sends requests against the API
+ */
 class Request
 {
   /**

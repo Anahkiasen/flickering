@@ -1,22 +1,22 @@
 <?php
-/**
- * Method
- *
- * A method being called on the API
- */
 namespace Flickering;
 
+use Illuminate\Container\Container;
 use BadMethodCallException;
 use Underscore\Types\Arrays;
 use Underscore\Types\String;
 
+/**
+ * A method being called on the API
+ */
 class Method
 {
   /**
-   * The current instance of the Flickering
-   * @var Flickering
+   * The IoC Container
+   *
+   * @var Container
    */
-  protected $flickering;
+  protected $app;
 
   /**
    * The method being called
@@ -39,12 +39,13 @@ class Method
   /**
    * Build a new Method
    *
-   * @param Flickering $flickering The Flickering API
-   * @param string     $method     The method being called
+   * @param Container $app
+   * @param string    $method
+   * @param array     $parameters
    */
-  public function __construct(Flickering $flickering, $method, $parameters = array())
+  public function __construct(Container $app, $method, $parameters = array())
   {
-    $this->flickering = $flickering;
+    $this->app        = $app;
     $this->method     = $method;
     $this->parameters = $parameters;
   }
@@ -62,7 +63,7 @@ class Method
     if (String::startsWith($method, 'set')) {
       $this->setParameter($realParameter, $parameters[0]);
     } elseif (String::startsWith($method, 'get')) {
-      return Arrays::get($this->parameters, $realParameter);
+      return array_get($this->parameters, $realParameter);
     } else {
       throw new BadMethodCallException('The method "' .$method. '" does not exist on the Method object');
     }
@@ -178,10 +179,10 @@ class Method
   {
     return new Request(
       $this->getPreparedParameters(),
-      $this->flickering->getConsumer(),
-      $this->flickering->getUser(),
-      $this->flickering->getContainer('cache'),
-      $this->flickering->getContainer('config')
+      $this->app['flickering']->getConsumer(),
+      $this->app['flickering']->getUser(),
+      $this->app['cache'],
+      $this->app['config']
     );
   }
 
@@ -197,7 +198,7 @@ class Method
     return Arrays::from($parameters)
       ->merge(array(
         'method'         => $this->getMethod(),
-        'api_key'        => $this->flickering->getConsumer()->getKey(),
+        'api_key'        => $this->app['flickering']->getConsumer()->getKey(),
         'format'         => $this->format,
         'nojsoncallback' => 1,
       ))

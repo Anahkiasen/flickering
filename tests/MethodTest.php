@@ -34,8 +34,7 @@ class MethodTest extends FlickeringTests
 
   public function testCanExecuteRequests()
   {
-    $flickering = $this->flickering;
-    $method = $flickering->callMethod('photos.getPhotos', array('foo' => 'bar'));
+    $method = $this->flickering->callMethod('photos.getPhotos', array('foo' => 'bar'));
 
     $method = $method->getResponse();
     $method = $method['message'];
@@ -52,7 +51,7 @@ class MethodTest extends FlickeringTests
     $this->assertEquals('changed', $parameters['api_key']);
   }
 
-  public function testCanElegantlySetParameters($value='')
+  public function testCanElegantlySetParameters()
   {
     $method = $this->getDummyMethod();
     $method->setApiKey('changed');

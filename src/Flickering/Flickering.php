@@ -1,10 +1,4 @@
 <?php
-/**
- * Flickering
- *
- * Main interface for the Flickering package
- * Creates calls to methods and handles configuration
- */
 namespace Flickering;
 
 use BadMethodCallException;
@@ -15,42 +9,59 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container as DependencyContainer;
 use Illuminate\Container\Container;
 use Opauth;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Underscore\Types\Arrays;
 
+/**
+ * Main interface for the Flickering package
+ * Creates calls to methods and handles configuration
+ */
 class Flickering
 {
   /**
+   * The IoC Container
+   *
+   * @var Container
+   */
+  protected $container;
+
+  /**
    * The API
+   *
    * @var Consumer
    */
   protected $consumer;
 
   /**
    * The User
+   *
    * @var User
    */
   protected $user;
 
   /**
    * The Flickr API endpoint
+   *
    * @var string
    */
   const API_URL = 'api.flickr.com/services/rest/?';
 
   /**
-   * The Illuminate Container
-   * @var Container
+   * Setup an instance of the API
+   *
+   * @param Container $app
    */
-  protected static $container;
+  public function __construct(Container $app)
+  {
+    $this->app = $app;
+  }
 
   /**
-   * Setup an instance of the API
+   * Set the API credentials
    *
    * @param string    $key       The API key
    * @param string    $secret    The API secret key
    */
-  public function __construct($key = null, $secret = null)
+  public function handshake($key = null, $secret = null)
   {
     // Create Consumer
     if (!$key)    $key    = $this->getOption('api_key');
@@ -71,7 +82,7 @@ class Flickering
       return $alias;
     }
 
-    throw new BadMethodCallException('The requested method "' .$method. '" does not exist');
+    throw new BadMethodCallException('Method ' .$method. ' does not exist');
   }
 
   /**
@@ -84,7 +95,7 @@ class Flickering
    */
   public function callMethod($method, $parameters = array())
   {
-    return new Method($this, $method, $parameters);
+    return new Method($this->app, $method, $parameters);
   }
 
   /**
@@ -97,7 +108,7 @@ class Flickering
    */
   protected function callMethodByAlias($method, $parameters)
   {
-    $aliases = $this->getContainer('config')->get('methods');
+    $aliases = $this->app['config']->get('methods');
 
     if (!$aliases or !array_key_exists($method, $aliases)) return false;
 
@@ -109,7 +120,7 @@ class Flickering
 
     // Rebuild parameters array
     foreach ($argumentList as $key => $argument) {
-      $arguments[$argument] = Arrays::get($parameters, $key);
+      $arguments[$argument] = array_get($parameters, $key);
     }
 
     return $this->callMethod($method, $arguments);
@@ -176,10 +187,14 @@ class Flickering
    */
   public function getUser()
   {
-    if ($this->isAuthentified() and $this->user) return $this->user;
+    if ($this->isAuthentified() and $this->user) {
+      return $this->user;
+    }
 
-    $user = $this->getContainer('session')->get('flickering_oauth_user');
-    if (!$user) $user = new OAuth\User();
+    $user = $this->app['session']->get('flickering_oauth_user');
+    if (!$user) {
+      $user = new OAuth\User();
+    }
 
     return $this->user = $user;
   }
@@ -191,7 +206,7 @@ class Flickering
    */
   public function isAuthentified()
   {
-    return $this->getContainer('session')->has('flickering_oauth_user');
+    return $this->app['session']->has('flickering_oauth_user');
   }
 
   /**
@@ -204,7 +219,7 @@ class Flickering
    */
   public function getOption($option, $fallback = null)
   {
-    return $this->getContainer('config')->get('config.'.$option, $fallback);
+    return $this->app['config']->get('flickering::'.$option, $fallback);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -218,7 +233,7 @@ class Flickering
    */
   protected function getOpauthConfiguration()
   {
-    $config = $this->getContainer('config')->get('opauth');
+    $config = $this->app['config']->get('opauth');
 
     // Set additional configuration options
     $config['strategy_dir']                 = __DIR__.'/../vendor/flickr';
@@ -251,75 +266,7 @@ class Flickering
       $response = unserialize(base64_decode($_POST['opauth']));
       $user = new OAuth\User($response['auth']);
 
-      $this->getContainer('session')->set('flickering_oauth_user', $user);
+      $this->app['session']->set('flickering_oauth_user', $user);
     }
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  /////////////////////////// DEPENDENCIES ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Get the IoC Container
-   *
-   * @param  string $make A dependency to make on the go
-   *
-   * @return Container
-   */
-  public function getContainer($make = null)
-  {
-    if (!static::$container) {
-      static::$container = $this->makeContainer();
-    }
-
-    if ($make) {
-      return static::$container[$make];
-    }
-
-    return static::$container;
-  }
-
-  /**
-   * Replace the IoC Container
-   *
-   * @param Container $container
-   */
-  public function setContainer(Container $container)
-  {
-    static::$container = $container;
-  }
-
-  /**
-   * Create a new IoC Container
-   *
-   * @return Container
-   */
-  protected function makeContainer()
-  {
-    $container = new Container;
-
-    $container->bindIf('Filesystem', 'Illuminate\Filesystem\Filesystem');
-    $container->bindIf('FileLoader', function($container) {
-      return new FileLoader($container['Filesystem'], __DIR__.'/../..');
-    });
-
-    $container->bindIf('config', function($container) {
-      return new Repository($container['FileLoader'], 'config');
-    });
-
-    $container->bindIf('cache', function($container) {
-      $fileStore = new FileStore($container['Filesystem'], __DIR__.'/../../cache');
-
-      return new CacheRepository($fileStore);
-    });
-
-    $container->singleton('session', function($container) {
-      $session = new Session;
-      if (!$session->isStarted()) $session->start();
-
-      return $session;
-    });
-
-    return $container;
   }
 }
