@@ -1,10 +1,9 @@
 <?php
 namespace Flickering;
 
-use Illuminate\Container\Container;
 use BadMethodCallException;
-use Underscore\Types\Arrays;
-use Underscore\Types\String;
+use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 
 /**
  * A method being called on the API
@@ -60,9 +59,9 @@ class Method
 	{
 		$realParameter = $this->getRealParameter($method);
 
-		if (String::startsWith($method, 'set')) {
+		if (Str::startsWith($method, 'set')) {
 			$this->setParameter($realParameter, $parameters[0]);
-		} elseif (String::startsWith($method, 'get')) {
+		} elseif (Str::startsWith($method, 'get')) {
 			return array_get($this->parameters, $realParameter);
 		} else {
 			throw new BadMethodCallException('The method "' .$method. '" does not exist on the Method object');
@@ -111,11 +110,10 @@ class Method
 	 */
 	protected function getRealParameter($parameter)
 	{
-		return String::from($parameter)
-			->substr(3)
-			->lcfirst()
-			->toSnakeCase()
-			->obtain();
+		$parameter = substr($parameter, 3);
+		$parameter = lcfirst($parameter);
+
+		return Str::snake($parameter);
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -195,15 +193,17 @@ class Method
 	 */
 	protected function prepareParameters($parameters)
 	{
-		return Arrays::from($parameters)
-			->merge(array(
-				'method'         => $this->getMethod(),
-				'api_key'        => $this->app['flickering']->getConsumer()->getKey(),
-				'format'         => $this->format,
-				'nojsoncallback' => 1,
-			))
-			->sortKeys()
-			->clean()
-			->obtain();
+		$parameters = array_merge($parameters, array(
+			'method'         => $this->getMethod(),
+			'api_key'        => $this->app['flickering']->getConsumer()->getKey(),
+			'format'         => $this->format,
+			'nojsoncallback' => 1,
+		));
+
+		// Sort parameters and filter
+		ksort($parameters);
+		$parameters = array_filter($parameters);
+
+		return $parameters;
 	}
 }

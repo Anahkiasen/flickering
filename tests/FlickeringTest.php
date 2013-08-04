@@ -19,7 +19,7 @@ class FlickeringTest extends FlickeringTests
 	{
 		$config = $this->flickering->getOption('api_key');
 
-		$this->assertEquals('foo', $config);
+		$this->assertEquals('', $config);
 	}
 
 	public function testCanUseMethodShortcuts()

@@ -6,9 +6,8 @@ use Flickering\OAuth\User;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\Config\Repository as Config;
 use tmhOAuth;
+use Underscore\Methods\ArraysMethods as Arrays;
 use Underscore\Parse;
-use Underscore\Types\Arrays;
-use Underscore\Types\String;
 
 /**
  * Sends requests against the API
@@ -121,7 +120,9 @@ class Request
 
 		// Fetch results from sub-arrays
 		$results = Results::from($results)->first();
-		if ($subresults) $results = $results->get($subresults);
+		if ($subresults) {
+			$results = $results->get($subresults);
+		}
 
 		return $results;
 	}
@@ -193,7 +194,7 @@ class Request
 			if (!$parse) return $response;
 
 			// Parse resulting content
-			switch (Arrays::get($parameters, 'format')) {
+			switch (array_get($parameters, 'format')) {
 				case 'json':
 					return Parse::fromJSON($response);
 				default:

@@ -6,8 +6,6 @@
  */
 namespace Flickering\OAuth;
 
-use Underscore\Types\Arrays;
-
 class User extends Token
 {
 	/**
@@ -38,13 +36,13 @@ class User extends Token
 		$response = (array) $response;
 
 		// Flickr informations
-		$this->uid          = Arrays::get($response, 'uid');
-		$this->informations = Arrays::get($response, 'info');
-		$this->person       = Arrays::get($response, 'raw');
+		$this->uid          = array_get($response, 'uid');
+		$this->informations = array_get($response, 'info');
+		$this->person       = array_get($response, 'raw');
 
 		// OAuth credentials
-		$this->key    = Arrays::get($response, 'credentials.token');
-		$this->secret = Arrays::get($response, 'credentials.secret');
+		$this->key    = array_get($response, 'credentials.token');
+		$this->secret = array_get($response, 'credentials.secret');
 	}
 
 	////////////////////////////////////////////////////////////////////
