@@ -2,14 +2,8 @@
 namespace Flickering;
 
 use BadMethodCallException;
-use Illuminate\Cache\FileStore;
-use Illuminate\Config\FileLoader;
-use Illuminate\Cache\Repository as CacheRepository;
-use Illuminate\Config\Repository;
-use Illuminate\Container\Container as DependencyContainer;
 use Illuminate\Container\Container;
 use Opauth;
-use Underscore\Types\Arrays;
 
 /**
  * Main interface for the Flickering package
