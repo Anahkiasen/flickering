@@ -102,7 +102,7 @@ class Flickering
 	 */
 	protected function callMethodByAlias($method, $parameters)
 	{
-		$aliases = $this->app['config']->get('methods');
+		$aliases = $this->getOption('methods');
 
 		if (!$aliases or !array_key_exists($method, $aliases)) return false;
 

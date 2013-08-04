@@ -179,8 +179,7 @@ class Method
 			$this->getPreparedParameters(),
 			$this->app['flickering']->getConsumer(),
 			$this->app['flickering']->getUser(),
-			$this->app['cache'],
-			$this->app['config']
+			$this->app
 		);
 	}
 

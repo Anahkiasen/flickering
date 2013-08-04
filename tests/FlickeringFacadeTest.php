@@ -6,7 +6,7 @@ class FlickeringFacadeTest extends FlickeringTests
 	public function testCanCreateInstanceFromFacade()
 	{
 		Flickering::handshake('foo', 'bar');
-		$method = Flickering::callMethod('foobar');
+		$method = Flickering::photosetsGetPhotos();
 
 		$this->assertInstanceOf('Flickering\Method', $method);
 	}

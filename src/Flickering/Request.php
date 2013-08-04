@@ -3,8 +3,7 @@ namespace Flickering;
 
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
-use Illuminate\Cache\Repository as Cache;
-use Illuminate\Config\Repository as Config;
+use Illuminate\Container\Container;
 use tmhOAuth;
 use Underscore\Methods\ArraysMethods as Arrays;
 use Underscore\Parse;
@@ -15,37 +14,50 @@ use Underscore\Parse;
 class Request
 {
 	/**
+	 * The IoC Contaienr
+	 *
+	 * @var Container
+	 */
+	protected $app;
+
+	/**
 	 * The OAuth Consumer
+	 *
 	 * @var Consumer
 	 */
 	protected $consumer;
 
 	/**
 	 * The OAuth User
+	 *
 	 * @var User
 	 */
 	protected $user;
 
 	/**
 	 * Instance of the Cache class
+	 *
 	 * @var Cache
 	 */
 	protected $cache;
 
 	/**
 	 * Instance of the Config class
+	 *
 	 * @var Config
 	 */
 	protected $config;
 
 	/**
 	 * The POST parameters to request
+	 *
 	 * @var array
 	 */
 	protected $parameters;
 
 	/**
 	 * What to cache the request as
+	 *
 	 * @var string
 	 */
 	protected $hash;
@@ -53,20 +65,18 @@ class Request
 	/**
 	 * Create a new Request
 	 *
-	 * @param array      $parameters The request POST parameters
-	 * @param Consumer   $consumer   The Consumer
-	 * @param User       $user       The User
-	 * @param Flickering $flickering The Flickering instance
+	 * @param array     $parameters
+	 * @param Consumer  $consumer
+	 * @param User      $user
+	 * @param Container $app
 	 */
-	public function __construct($parameters, Consumer $consumer, User $user, Cache $cache, Config $config)
+	public function __construct(array $parameters, Consumer $consumer, User $user, Container $app)
 	{
+		$this->app = $app;
+
 		// OAuth
 		$this->consumer = $consumer;
 		$this->user     = $user;
-
-		// Dependencies
-		$this->cache  = $cache;
-		$this->config = $config;
 
 		// Request parameters
 		$this->parameters = $parameters;
@@ -139,11 +149,11 @@ class Request
 	public function getCacheLifetime()
 	{
 		// If cache disabled, always return false
-		if (!$this->config->get('config.cache.cache_requests')) {
+		if (!$this->app['config']->get('config.cache.cache_requests')) {
 			return 0;
 		}
 
-		return (int) $this->config->get('config.cache.lifetime');
+		return (int) $this->app['config']->get('config.cache.lifetime');
 	}
 
 	/**
@@ -175,7 +185,7 @@ class Request
 		$consumer   = $this->consumer;
 		$parameters = $this->parameters;
 
-		return $this->cache->remember($parse.$this->hash, $this->getCacheLifetime(), function()
+		return $this->app['cache']->remember($parse.$this->hash, $this->getCacheLifetime(), function()
 			use ($parse, $user, $consumer, $parameters) {
 
 			// Create OAuth request

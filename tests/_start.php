@@ -94,11 +94,10 @@ abstract class FlickeringTests extends PHPUnit_Framework_TestCase
 	{
 		$user     = $this->getDummyUser();
 		$consumer = new Consumer('foo', 'bar');
-		$cache    = $this->app['cache'];
-		if (!$config) {
-			$config = $this->app['config'];
+		if ($config) {
+			$this->app['config'] = $config;
 		}
 
-		return new Request($parameters, $consumer, $user, $cache, $config);
+		return new Request($parameters, $consumer, $user, $this->app);
 	}
 }
