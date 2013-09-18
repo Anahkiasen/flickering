@@ -23,13 +23,6 @@ class FlickeringServiceProvider extends ServiceProvider
 	protected $defer = true;
 
 	/**
-	 * The commands to register
-	 *
-	 * @var array
-	 */
-	protected $commands;
-
-	/**
 	 * Register the service provider.
 	 *
 	 * @return void
