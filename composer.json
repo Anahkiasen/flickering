@@ -16,14 +16,14 @@
   ],
   "require": {
     "php": ">=5.3.0",
-    "anahkiasen/underscore-php": "dev-master",
+    "anahkiasen/underscore-php": "~1.2",
     "illuminate/cache": "~4",
     "illuminate/config": "~4",
     "illuminate/container": "~4",
     "illuminate/http": "~4",
     "illuminate/support": "~4",
-    "opauth/flickr": "dev-master",
-    "themattharris/tmhOAuth": "dev-master"
+    "opauth/flickr": "*",
+    "themattharris/tmhOAuth": "0.8.x"
   },
   "require-dev": {
     "mockery/mockery": "dev-master"
