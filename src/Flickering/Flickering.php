@@ -227,7 +227,7 @@ class Flickering
 	 */
 	protected function getOpauthConfiguration()
 	{
-		$config = $this->app['config']->get('opauth');
+		$config = $this->app['config']->get('flickering::opauth');
 
 		// Set additional configuration options
 		$config['strategy_dir']                 = __DIR__.'/../vendor/flickr';
