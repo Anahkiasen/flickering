@@ -6,8 +6,24 @@ It's a **work in progress** but it already works so don't worry about that.
 You can get it on Composer, in order to do so just add it to your application like this :
 
 ```json
-"anahkiasen/flickering": "dev-master"
+"anahkiasen/flickering": "*"
 ```
+
+After updating composer, add the ServiceProvider to the providers array in app/config/app.php
+
+```php
+'Flickering\FlickeringServiceProvider',
+```
+
+If you want to use the facade, also add that to app.php:
+
+```php
+ 'Flickering' => 'Flickering\Facades\Flickering',
+ ```
+
+If you want to use store the api keys/secret in the config, publish the config files.
+
+    $ php artisan config:publish anahkiasen/flickering
 
 ## Using Flickering
 
@@ -19,16 +35,18 @@ Once you have that, set it in Flickering's `config/config.php` file. Or if you d
 To start working with Flickering, create a new instance of it like the example underneath. If you set your API credentials in the config file, you don't need to pass any arguments to the constructor as it will automatically fetch your key and secret key from the config files.
 
 ```php
-$flickering = new Flickering\Flickering($apiKey, $apiSecret);
+$flickering = App::make('flickering');
+$flickering->handshake($apiKey, $apiSecret);
 ```
 
 If working with instances is not your thing, Flickering also uses [Illuminate][]'s Facade component to provide a static interface to all its methods. You can create a new static instance of Flickering like this. Arguments are facultative if config file is set, same as above.
 
 ```php
-Flickering\Facades\Flickering::handshake($apiKey, $apiSecret)
+Flickering::handshake($apiKey, $apiSecret)
+Flickering::handshake();    //Using the config file
 ```
 
-The difference is that the static facade will always refer to the same instance of Flickering throughout all calls while creating an instance allows you to work with different API credentials in different places.
+Before doing anything with the Flickr api, you have to call the handshake (once).
 
 ### Calling methods on the Flickr API
 
@@ -92,14 +110,19 @@ If you're using Flickering with your favorite framework, use it's _Router_ to le
 Here is an example implementation with the [Laravel][] framework :
 
 ```php
-Route::get(['flickr', 'flickr/oauth_callback'], function() {
-  return Flickering::getOpauth();
+Route::get('flickr/auth', function() {
+    Flickering::handshake();
+    return Flickering::getOpauth();
 });
-
-Route::get('flickr/callback', function() {
-  Flickering::getOpauthCallback();
-
-  return Redirect::to('user/photos');
+Route::any('flickr/oauth_callback', function() {
+    Flickering::handshake();
+    if(Request::getMethod() == 'POST'){
+        Flickering::getOpauthCallback();
+        return 'Authenticated!';
+    }else{
+        Flickering::getOpauth();
+        return 'Being redirected..';
+    }
 });
 ```
 
@@ -110,6 +133,7 @@ If you're using any framework and just want to make some requests on a plain old
 Once the user has been logged in you can get its informations via the `Flickering::getUser()` method which will return an **User** object containing the various informations sent back by the OAuth process. Here are some of the methods available :
 
 ```php
+Flickering::handshake();
 $user = Flickering::getUser();
 
 // Get OAuth token
