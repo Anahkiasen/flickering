@@ -29,8 +29,8 @@
     "mockery/mockery": "dev-master"
   },
   "autoload": {
-    "psr-0": {
-      "Flickering": "src"
+    "psr-4": {
+      "Flickering\\": "src/Flickering"
     }
   }
 }
