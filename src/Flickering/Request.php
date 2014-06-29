@@ -193,7 +193,7 @@ class Request
 				'consumer_key'    => $consumer->getKey(),
 				'consumer_secret' => $consumer->getSecret(),
 				'host'            => Flickering::API_URL,
-				'use_ssl'         => false,
+				'use_ssl'         => true,
 				'user_token'      => $user->getKey(),
 				'user_secret'     => $user->getSecret(),
 			));
