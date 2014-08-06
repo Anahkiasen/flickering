@@ -149,11 +149,11 @@ class Request
 	public function getCacheLifetime()
 	{
 		// If cache disabled, always return false
-		if (!$this->app['config']->get('config.cache.cache_requests')) {
+		if (!$this->app['config']->get('flickering::config.cache.cache_requests')) {
 			return 0;
 		}
 
-		return (int) $this->app['config']->get('config.cache.lifetime');
+		return (int) $this->app['config']->get('flickering::config.cache.lifetime');
 	}
 
 	/**
