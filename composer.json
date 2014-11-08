@@ -22,7 +22,7 @@
     "illuminate/container": "~4.0",
     "illuminate/http": "~4.0",
     "illuminate/support": "~4.0",
-    "opauth/flickr": "~1.0",
+    "opauth/flickr": "~1.1",
     "themattharris/tmhOAuth": "~0.8"
   },
   "require-dev": {
