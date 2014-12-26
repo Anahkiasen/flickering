@@ -150,7 +150,7 @@ class Request
 	{
 		// If cache disabled, always return false
 		if (!$this->app['config']->get('flickering::config.cache.cache_requests')) {
-			return 0;
+			return null;
 		}
 
 		return (int) $this->app['config']->get('flickering::config.cache.lifetime');
