@@ -11,13 +11,9 @@
 Flickering is a next-generation PHP API for the [Flickr][] photos sharing social network.
 It's a **work in progress** but it already works so don't worry about that.
 
-You can get it on Composer, in order to do so just add it to your application like this :
+You can get it on Composer, in order to do so just run `composer require anahkiasen/flickering`.
 
-```json
-"anahkiasen/flickering": "*"
-```
-
-After updating composer, add the ServiceProvider to the providers array in app/config/app.php
+After that add the ServiceProvider to the providers array in app/config/app.php
 
 ```php
 'Flickering\FlickeringServiceProvider',
