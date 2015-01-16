@@ -5,9 +5,8 @@ use Illuminate\Cache\FileStore;
 use Illuminate\Cache\Repository as Cache;
 use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository as Config;
-use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -54,7 +53,7 @@ class FlickeringServiceProvider extends ServiceProvider
     public function bindCoreClasses()
     {
         $this->app->bindIf('request', function () {
-            return Request::createFromGlobals();
+            return HttpRequest::createFromGlobals();
         }, true);
 
         $this->app->bindIf('config', function () {
@@ -79,8 +78,6 @@ class FlickeringServiceProvider extends ServiceProvider
 
     /**
      * Bind the Rocketeer classes to the Container
-     *
-     * @return Container
      */
     public function bindClasses()
     {

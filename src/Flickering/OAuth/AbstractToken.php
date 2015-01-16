@@ -1,12 +1,12 @@
 <?php
 /**
- * Token
+ * AbstractToken
  * A security token
  */
 
 namespace Flickering\OAuth;
 
-abstract class Token
+abstract class AbstractToken
 {
     /**
      * His token

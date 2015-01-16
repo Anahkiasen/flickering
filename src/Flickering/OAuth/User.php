@@ -6,7 +6,7 @@
 
 namespace Flickering\OAuth;
 
-class User extends Token
+class User extends AbstractToken
 {
     /**
      * The User UID
@@ -34,7 +34,7 @@ class User extends Token
      *
      * @param array $response
      */
-    public function __construct($response = null)
+    public function __construct($response = array())
     {
         $response = (array) $response;
 

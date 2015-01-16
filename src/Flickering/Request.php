@@ -4,6 +4,7 @@ namespace Flickering;
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
 use Illuminate\Container\Container;
+use Illuminate\Support\Collection;
 use tmhOAuth;
 use Underscore\Methods\ArraysMethods as Arrays;
 use Underscore\Parse;
@@ -120,16 +121,17 @@ class Request
     /**
      * Get the results of the Request as a Results instance
      *
-     * @param string $subresults A subresult array to fetch from results
+     * @param string|null $subresults A subresult array to fetch from results
      *
      * @return Results
      */
     public function getResults($subresults = null)
     {
         $results = $this->execute();
+        $results = new Collection($results);
 
         // Fetch results from sub-arrays
-        $results = Results::from($results)->first();
+        $results = $results->first();
         if ($subresults) {
             $results = $results->get($subresults);
         }
@@ -144,7 +146,7 @@ class Request
     /**
      * Get the lifetime of the cache
      *
-     * @return integer
+     * @return integer|null
      */
     public function getCacheLifetime()
     {
@@ -178,6 +180,8 @@ class Request
 
     /**
      * Execute the Request against the API
+     *
+     * @param boolean $parse
      *
      * @return array
      */
