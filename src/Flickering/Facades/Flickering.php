@@ -1,13 +1,13 @@
 <?php
 /**
  * Facades\Flickering
- *
  * Static facade for Flickering
  */
 
 namespace Flickering\Facades;
 
 use Flickering\FlickeringServiceProvider;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
 
 class Flickering extends Facade
@@ -20,7 +20,11 @@ class Flickering extends Facade
     protected static function getFacadeAccessor()
     {
         if (!static::$app) {
-            static::$app = FlickeringServiceProvider::make();
+            $app      = new Container();
+            $provider = new FlickeringServiceProvider($app);
+            $provider->register();
+
+            static::$app = $app;
         }
 
         return 'flickering';

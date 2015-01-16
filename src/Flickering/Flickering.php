@@ -2,6 +2,8 @@
 namespace Flickering;
 
 use BadMethodCallException;
+use Flickering\OAuth\Consumer;
+use Flickering\OAuth\User;
 use Illuminate\Container\Container;
 use Opauth;
 
@@ -16,7 +18,7 @@ class Flickering
      *
      * @var Container
      */
-    protected $container;
+    protected $app;
 
     /**
      * The API
@@ -52,24 +54,27 @@ class Flickering
     /**
      * Set the API credentials
      *
-     * @param string $key    The API key
-     * @param string $secret The API secret key
+     * @param string|null $key    The API key
+     * @param string|null $secret The API secret key
      */
     public function handshake($key = null, $secret = null)
     {
         // Create Consumer
         if (!$key) {
-            $key    = $this->getOption('api_key');
+            $key = $this->getOption('api_key');
         }
         if (!$secret) {
             $secret = $this->getOption('api_secret');
         }
 
-        $this->consumer = new OAuth\Consumer($key, $secret);
+        $this->consumer = new Consumer($key, $secret);
     }
 
     /**
      * Aliased calls
+     *
+     * @param string $method
+     * @param array  $parameters
      *
      * @return Method
      */
@@ -119,6 +124,7 @@ class Flickering
         }, $method, 1);
 
         // Rebuild parameters array
+        $arguments = [];
         foreach ($argumentList as $key => $argument) {
             $arguments[$argument] = array_get($parameters, $key);
         }
@@ -155,9 +161,9 @@ class Flickering
     /**
      * Directly get the results of a method
      *
-     * @param string $method     The method name
-     * @param array  $parameters Its parameters
-     * @param string $subresults Subresults to fetch
+     * @param string      $method     The method name
+     * @param array       $parameters Its parameters
+     * @param string|null $subresults Subresults to fetch
      *
      * @return Results
      */
@@ -193,7 +199,7 @@ class Flickering
 
         $user = $this->app['session']->get('flickering_oauth_user');
         if (!$user) {
-            $user = new OAuth\User();
+            $user = new User();
         }
 
         return $this->user = $user;
@@ -264,7 +270,7 @@ class Flickering
         // Store User credentials into session
         if (isset($_POST['opauth'])) {
             $response = unserialize(base64_decode($_POST['opauth']));
-            $user     = new OAuth\User($response['auth']);
+            $user     = new User($response['auth']);
 
             $this->app['session']->set('flickering_oauth_user', $user);
         }

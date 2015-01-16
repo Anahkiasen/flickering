@@ -29,18 +29,8 @@ class FlickeringServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // ...
-    }
-
-    /**
-     * Bind classes and commands
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        // Register classes and commands
-        $this->app = static::make($this->app);
+        $this->bindCoreClasses();
+        $this->bindClasses();
     }
 
     /**
@@ -58,73 +48,43 @@ class FlickeringServiceProvider extends ServiceProvider
     ////////////////////////////////////////////////////////////////////
 
     /**
-     * Make a Rocketeer container
-     *
-     * @return Container
-     */
-    public static function make($app = null)
-    {
-        if (!$app) {
-            $app = new Container();
-        }
-
-        $serviceProvider = new static($app);
-
-        // Bind classes
-        $app = $serviceProvider->bindCoreClasses($app);
-        $app = $serviceProvider->bindClasses($app);
-
-        return $app;
-    }
-
-    /**
      * Bind the core classes
-     *
-     * @param Container $app
-     *
-     * @return Container
      */
-    public function bindCoreClasses(Container $app)
+    public function bindCoreClasses()
     {
-        $app->bindIf('request', function ($app) {
+        $this->app->bindIf('request', function () {
             return Request::createFromGlobals();
         }, true);
 
-        $app->bindIf('config', function ($app) {
+        $this->app->bindIf('config', function () {
             $fileloader = new FileLoader(new Filesystem(), __DIR__.'/../config');
 
             return new Config($fileloader, 'config');
         }, true);
 
-        $app->bindIf('cache', function ($app) {
+        $this->app->bindIf('cache', function () {
             $fileStore = new FileStore(new Filesystem(), __DIR__.'/../../cache');
 
             return new Cache($fileStore);
         });
 
-        $app->bindIf('session', function ($app) {
+        $this->app->bindIf('session', function () {
             return new Session();
         }, true);
 
         // Register config file
-        $app['config']->package('anahkiasen/flickering', __DIR__.'/../config');
-
-        return $app;
+        $this->app['config']->package('anahkiasen/flickering', __DIR__.'/../config');
     }
 
     /**
      * Bind the Rocketeer classes to the Container
      *
-     * @param Container $app
-     *
      * @return Container
      */
-    public function bindClasses(Container $app)
+    public function bindClasses()
     {
-        $app->singleton('flickering', function ($app) {
+        $this->app->singleton('flickering', function ($app) {
             return new Flickering($app);
         });
-
-        return $app;
     }
 }

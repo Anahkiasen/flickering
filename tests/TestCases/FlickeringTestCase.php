@@ -6,6 +6,7 @@ use Flickering\Method;
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
 use Flickering\Request;
+use Illuminate\Container\Container;
 use Mockery;
 use PHPUnit_Framework_TestCase;
 
@@ -26,7 +27,11 @@ abstract class FlickeringTestCase extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->app = FlickeringServiceProvider::make();
+        $this->app = new Container();
+
+        $provider = new FlickeringServiceProvider($this->app);
+        $provider->register();
+
         $this->app['flickering']->handshake('foo', 'bar');
         $this->app['session'] = $this->mockSession($this->getDummyUser());
     }
