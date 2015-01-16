@@ -1,21 +1,21 @@
 <?php return array(
 
-	// API credentials
-	//////////////////////////////////////////////////////////////////////
+    // API credentials
+    //////////////////////////////////////////////////////////////////////
 
-	'api_key'    => '',
-	'api_secret' => '',
+    'api_key'    => '',
+    'api_secret' => '',
 
-	// Cache configuration
-	//////////////////////////////////////////////////////////////////////
+    // Cache configuration
+    //////////////////////////////////////////////////////////////////////
 
-	'cache' => array(
+    'cache' => array(
 
-		// Whether Flickering should cache requests or not
-		'cache_requests' => false,
+        // Whether Flickering should cache requests or not
+        'cache_requests' => false,
 
-		// The lifetime of a cached request (minutes)
-		'lifetime' => 60 * 24 * 365,
-	),
+        // The lifetime of a cached request (minutes)
+        'lifetime' => 60 * 24 * 365,
+    ),
 
 );

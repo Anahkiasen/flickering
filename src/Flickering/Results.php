@@ -9,5 +9,5 @@ use Underscore\Types\Arrays;
  */
 class Results extends Arrays
 {
-	// ...
+    // ...
 }

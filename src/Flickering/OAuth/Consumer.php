@@ -4,6 +4,9 @@
  *
  * The consuming API
  */
+
 namespace Flickering\OAuth;
 
-class Consumer extends Token {}
+class Consumer extends Token
+{
+}

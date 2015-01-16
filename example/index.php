@@ -14,7 +14,7 @@ Flickering::handshake();
 $currentRequest = String::remove($_SERVER['REQUEST_URI'], '/flickering/example/');
 
 // If we're on the login page, or just came back from it, let Opauth handle it
-if ($currentRequest == '/flickr/' or String::startsWith($currentRequest, '/flickr/oauth_callback')) {
+if ($currentRequest == '/flickr/' || String::startsWith($currentRequest, '/flickr/oauth_callback')) {
 	return Flickering::getOpauth();
 }
 
