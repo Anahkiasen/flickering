@@ -1,5 +1,10 @@
 <?php
-class RequestTest extends FlickeringTests
+namespace Flickering;
+
+use Flickering\TestCases\FlickeringTestCase;
+use Mockery;
+
+class RequestTest extends FlickeringTestCase
 {
 	public function testCanCreateHashFromParameters()
 	{
@@ -14,7 +19,7 @@ class RequestTest extends FlickeringTests
 	public function testCacheTimeIsZeroIfCacheDisabled()
 	{
 		$config = Mockery::mock('Illuminate\Config\Repository');
-		$config->shouldReceive('get')->with('config.cache.cache_requests')->andReturn(false);
+		$config->shouldReceive('get')->with('flickering::config.cache.cache_requests')->andReturn(false);
 
 		$request = $this->getDummyRequest(array(), $config);
 
@@ -24,8 +29,8 @@ class RequestTest extends FlickeringTests
 	public function testCanGetCacheLifetime()
 	{
 		$config = Mockery::mock('Illuminate\Config\Repository');
-		$config->shouldReceive('get')->with('config.cache.cache_requests')->andReturn(true);
-		$config->shouldReceive('get')->with('config.cache.lifetime')->andReturn(20);
+		$config->shouldReceive('get')->with('flickering::config.cache.cache_requests')->andReturn(true);
+		$config->shouldReceive('get')->with('flickering::config.cache.lifetime')->andReturn(20);
 
 		$request = $this->getDummyRequest(array(), $config);
 

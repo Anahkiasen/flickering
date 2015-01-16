@@ -1,7 +1,10 @@
 <?php
-use Flickering\Facades\Flickering;
+namespace Flickering;
 
-class FlickeringFacadeTest extends FlickeringTests
+use Flickering\Facades\Flickering;
+use Flickering\TestCases\FlickeringTestCase;
+
+class FlickeringFacadeTest extends FlickeringTestCase
 {
 	public function testCanCreateInstanceFromFacade()
 	{

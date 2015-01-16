@@ -1,7 +1,10 @@
 <?php
-use Flickering\OAuth\User;
+namespace Flickering;
 
-class TokenTest extends FlickeringTests
+use Flickering\OAuth\User;
+use Flickering\TestCases\FlickeringTestCase;
+
+class TokenTest extends FlickeringTestCase
 {
 	public function testCanSetAndGetKeys()
 	{

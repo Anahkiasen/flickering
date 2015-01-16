@@ -1,7 +1,10 @@
 <?php
-use Flickering\Method;
+namespace Flickering;
 
-class MethodTest extends FlickeringTests
+use Flickering\Method;
+use Flickering\TestCases\FlickeringTestCase;
+
+class MethodTest extends FlickeringTestCase
 {
 	public function testCanPrefixMethods()
 	{

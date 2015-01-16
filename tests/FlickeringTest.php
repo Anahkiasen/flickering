@@ -1,7 +1,10 @@
 <?php
-use Flickering\Flickering;
+namespace Flickering;
 
-class FlickeringTest extends FlickeringTests
+use Flickering\Flickering;
+use Flickering\TestCases\FlickeringTestCase;
+
+class FlickeringTest extends FlickeringTestCase
 {
 	public function testCanBuildNewFlickeringInstance()
 	{
