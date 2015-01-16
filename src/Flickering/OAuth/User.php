@@ -1,7 +1,6 @@
 <?php
 /**
  * User
- *
  * An authentified User
  */
 
@@ -11,18 +10,21 @@ class User extends Token
 {
     /**
      * The User UID
+     *
      * @var string
      */
     protected $uid;
 
     /**
      * The User Flickr identity
+     *
      * @var array
      */
     protected $person;
 
     /**
      * The User basic informations
+     *
      * @var array
      */
     protected $informations;

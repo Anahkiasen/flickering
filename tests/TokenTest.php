@@ -6,16 +6,17 @@ use Flickering\TestCases\FlickeringTestCase;
 
 class TokenTest extends FlickeringTestCase
 {
-	public function testCanSetAndGetKeys()
-	{
-		$token = new User(array(
-			'credentials' => array(
-				'token' => 'foo',
-				'secret' => 'bar')
-			)
-		);
+    public function testCanSetAndGetKeys()
+    {
+        $token = new User(array(
+                'credentials' => array(
+                    'token'  => 'foo',
+                    'secret' => 'bar'
+                )
+            )
+        );
 
-		$this->assertEquals('foo', $token->getKey());
-		$this->assertEquals('bar', $token->getSecret());
-	}
+        $this->assertEquals('foo', $token->getKey());
+        $this->assertEquals('bar', $token->getSecret());
+    }
 }

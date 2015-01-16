@@ -7,6 +7,7 @@ use Illuminate\Config\FileLoader;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpFoundation\Session\Session;
 

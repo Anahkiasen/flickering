@@ -187,7 +187,12 @@ class Request
         $consumer   = $this->consumer;
         $parameters = $this->parameters;
 
-        return $this->app['cache']->remember($parse.$this->hash, $this->getCacheLifetime(), function () use ($parse, $user, $consumer, $parameters) {
+        return $this->app['cache']->remember($parse.$this->hash, $this->getCacheLifetime(), function () use (
+            $parse,
+            $user,
+            $consumer,
+            $parameters
+        ) {
 
             // Create OAuth request
             $request = new TmhOAuth(array(

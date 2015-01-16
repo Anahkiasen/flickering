@@ -1,7 +1,6 @@
 <?php
 /**
  * Consumer
- *
  * The consuming API
  */
 

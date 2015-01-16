@@ -19,18 +19,21 @@ class Method
 
     /**
      * The method being called
+     *
      * @var string
      */
     protected $method;
 
     /**
      * The format to return the response in
+     *
      * @var string
      */
     protected $format = 'json';
 
     /**
      * Parameters for the Method
+     *
      * @var array
      */
     protected $parameters;

@@ -1,7 +1,6 @@
 <?php
 /**
  * Token
- *
  * A security token
  */
 
@@ -11,12 +10,14 @@ abstract class Token
 {
     /**
      * His token
+     *
      * @var string
      */
     protected $key;
 
     /**
      * His secret
+     *
      * @var string
      */
     protected $secret;

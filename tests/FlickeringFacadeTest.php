@@ -6,11 +6,11 @@ use Flickering\TestCases\FlickeringTestCase;
 
 class FlickeringFacadeTest extends FlickeringTestCase
 {
-	public function testCanCreateInstanceFromFacade()
-	{
-		Flickering::handshake('foo', 'bar');
-		$method = Flickering::photosetsGetPhotos();
+    public function testCanCreateInstanceFromFacade()
+    {
+        Flickering::handshake('foo', 'bar');
+        $method = Flickering::photosetsGetPhotos();
 
-		$this->assertInstanceOf('Flickering\Method', $method);
-	}
+        $this->assertInstanceOf('Flickering\Method', $method);
+    }
 }
