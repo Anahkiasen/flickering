@@ -1,4 +1,12 @@
-# Flickering [![Build Status](https://next.travis-ci.org/Anahkiasen/flickering.png?branch=master)](https://next.travis-ci.org/Anahkiasen/flickering)
+# Flickering
+
+[![Build Status](http://img.shields.io/travis/Anahkiasen/flickering.svg?style=flat)](https://travis-ci.org/Anahkiasen/flickering)
+[![Latest Stable Version](http://img.shields.io/packagist/v/anahkiasen/flickering.svg?style=flat)](https://packagist.org/packages/anahkiasen/flickering)
+[![Total Downloads](http://img.shields.io/packagist/dt/anahkiasen/flickering.svg?style=flat)](https://packagist.org/packages/anahkiasen/flickering)
+[![Scrutinizer Quality Score](http://img.shields.io/scrutinizer/g/Anahkiasen/flickering.svg?style=flat)](https://scrutinizer-ci.com/g/Anahkiasen/flickering/)
+[![Code Coverage](http://img.shields.io/scrutinizer/coverage/g/Anahkiasen/flickering.svg?style=flat)](https://scrutinizer-ci.com/g/Anahkiasen/flickering/)
+[![Dependency Status](https://www.versioneye.com/user/projects/53f1c65f13bb0677b1000744/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53f1c65f13bb0677b1000744)
+[![Support via Gittip](http://img.shields.io/gittip/Anahkiasen.svg?style=flat)](https://www.gittip.com/Anahkiasen/)
 
 Flickering is a next-generation PHP API for the [Flickr][] photos sharing social network.
 It's a **work in progress** but it already works so don't worry about that.
