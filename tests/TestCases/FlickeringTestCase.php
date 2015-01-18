@@ -87,7 +87,8 @@ abstract class FlickeringTestCase extends PHPUnit_Framework_TestCase
             'credentials' => array(
                 'token'  => 'foo',
                 'secret' => 'bar'
-            )
+            ),
+            'uid' => '00000000000@N01'
         ));
     }
 

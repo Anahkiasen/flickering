@@ -175,6 +175,10 @@ class Request
             $hash[] = $k.'-'.$v;
         }
 
+        if ($this->user) {
+            $hash[] = $this->user->getUid();
+        }
+
         return implode('-', $hash);
     }
 

@@ -13,7 +13,7 @@ class RequestTest extends FlickeringTestCase
             'bis' => 'ter',
         ));
 
-        $this->assertEquals('bis-ter-foo-bar', $request->getHash());
+        $this->assertEquals('bis-ter-foo-bar-00000000000@N01', $request->getHash());
     }
 
     public function testCacheTimeIsZeroIfCacheDisabled()
