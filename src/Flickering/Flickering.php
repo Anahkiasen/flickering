@@ -2,6 +2,7 @@
 namespace Flickering;
 
 use BadMethodCallException;
+use Exception;
 use Flickering\OAuth\Consumer;
 use Flickering\OAuth\User;
 use Illuminate\Container\Container;
@@ -270,7 +271,13 @@ class Flickering
         // Store User credentials into session
         if (isset($_POST['opauth'])) {
             $response = unserialize(base64_decode($_POST['opauth']));
-            $user     = new User($response['auth']);
+
+            if (isset($response['auth'])) {
+                $user = new OAuth\User($response['auth']);
+            }
+            else {
+                throw new Exception('Flickr API returned an error : '.$response['error']['raw']);
+            }
 
             $this->app['session']->set('flickering_oauth_user', $user);
         }
