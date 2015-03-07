@@ -22,7 +22,7 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "anahkiasen/underscore-php": "dev-laravel-5",
+    "anahkiasen/underscore-php": "dev-laravel-5@dev",
     "illuminate/cache": "~5.0",
     "illuminate/config": "~5.0",
     "illuminate/container": "~5.0",
