@@ -14,14 +14,20 @@
       "email": "ehtnam6@gmail.com"
     }
   ],
+  "repositories": [
+  {
+      "type": "vcs",
+      "url": "https://github.com/williammck/underscore-php"
+    }
+  ],
   "require": {
     "php": ">=5.4.0",
-    "anahkiasen/underscore-php": "~1.3",
-    "illuminate/cache": "~4.2",
-    "illuminate/config": "~4.2",
-    "illuminate/container": "~4.2",
-    "illuminate/http": "~4.2",
-    "illuminate/support": "~4.2",
+    "anahkiasen/underscore-php": "dev-laravel-5@dev",
+    "illuminate/cache": "~5.0",
+    "illuminate/config": "~5.0",
+    "illuminate/container": "~5.0",
+    "illuminate/http": "~5.0",
+    "illuminate/support": "~5.0",
     "opauth/flickr": "~1.1",
     "themattharris/tmhoauth": "0.8.*"
   },
